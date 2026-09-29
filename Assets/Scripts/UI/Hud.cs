@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using GamingApp.Core;
@@ -9,8 +8,8 @@ namespace GamingApp.UI
     /// <summary>Timer, health bar, level and XP bar.</summary>
     public class Hud : MonoBehaviour
     {
-        [SerializeField] TMP_Text timerText;
-        [SerializeField] TMP_Text levelText;
+        [SerializeField] Text timerText;
+        [SerializeField] Text levelText;
         [SerializeField] Slider healthBar;
         [SerializeField] Slider xpBar;
         [SerializeField] Health playerHealth;

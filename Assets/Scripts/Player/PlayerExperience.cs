@@ -24,13 +24,14 @@ namespace GamingApp.Player
         public void AddXp(int amount)
         {
             Xp += amount;
-            while (Xp >= XpToNext)
+            // One level per call; leftover XP carries over and triggers the next level on the next pickup.
+            if (Xp >= XpToNext)
             {
                 Xp -= XpToNext;
                 Level++;
                 XpToNext = Mathf.CeilToInt(XpToNext * xpGrowth);
+                GameManager.Instance.SetState(RunState.LevelUp); // before the event: a listener may resume immediately
                 LeveledUp?.Invoke(Level);
-                GameManager.Instance.SetState(RunState.LevelUp);
             }
             XpChanged?.Invoke(Xp, XpToNext);
         }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using GamingApp.Weapons;
@@ -12,8 +11,8 @@ namespace GamingApp.UI
         [SerializeField] GameObject root;
         [SerializeField] UpgradeManager upgrades;
         [SerializeField] Button[] cardButtons;
-        [SerializeField] TMP_Text[] cardTitles;
-        [SerializeField] TMP_Text[] cardDescriptions;
+        [SerializeField] Text[] cardTitles;
+        [SerializeField] Text[] cardDescriptions;
 
         void Awake() => root.SetActive(false);
         void OnEnable() => upgrades.ChoicesRolled += Show;

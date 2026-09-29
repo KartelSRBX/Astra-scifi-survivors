@@ -1,0 +1,117 @@
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using GamingApp.Core;
+using GamingApp.Enemies;
+using GamingApp.Player;
+using GamingApp.Weapons;
+
+namespace GamingApp.EditorTools
+{
+    /// <summary>
+    /// Tools > GamingApp > Build Test Scene: creates placeholder prefabs/data and a playable
+    /// Assets/Scenes/Main.unity. Safe to re-run; it regenerates everything.
+    /// </summary>
+    public static class SceneBuilder
+    {
+        const string ScenePath = BuilderUtil.SceneDir + "/Main.unity";
+        const float TestRunSeconds = 300f; // 5 min for quick playtests; roadmap target is 10-15 min
+
+        [MenuItem("Tools/GamingApp/Build Test Scene")]
+        public static void BuildTestScene()
+        {
+            var assets = AssetBuilder.BuildAll();
+            BuilderUtil.EnsureDir(BuilderUtil.SceneDir);
+
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+            BuildWorld();
+            var player = BuildPlayer(assets.PlayerProjectile, out var weapon);
+            BuildCamera(player.transform);
+            BuildManagers(player, weapon, assets, out var upgrades);
+            UiBuilder.Build(player.GetComponent<Health>(), player.GetComponent<PlayerExperience>(), upgrades);
+
+            EditorSceneManager.SaveScene(scene, ScenePath);
+            AddToBuildSettings(ScenePath);
+            AndroidSettings.Apply();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("[GamingApp] Test scene built: " + ScenePath + ". Press Play. Drag with mouse/finger to move.");
+        }
+
+        // Entry point for CLI: Unity -batchmode -quit -executeMethod GamingApp.EditorTools.SceneBuilder.BuildFromCommandLine
+        public static void BuildFromCommandLine() => BuildTestScene();
+
+        static void BuildWorld()
+        {
+            var lightGo = new GameObject("Directional Light");
+            var light = lightGo.AddComponent<Light>();
+            light.type = LightType.Directional;
+            lightGo.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+
+            var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            ground.name = "Ground";
+            ground.transform.localScale = new Vector3(40f, 1f, 40f); // 400x400 units
+            ground.GetComponent<Renderer>().sharedMaterial = BuilderUtil.MakeMaterial("Ground", new Color(0.12f, 0.14f, 0.18f));
+        }
+
+        static GameObject BuildPlayer(Projectile projectile, out AutoWeapon weapon)
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            go.name = "Player";
+            go.transform.position = new Vector3(0f, 1f, 0f);
+            go.GetComponent<Renderer>().sharedMaterial = BuilderUtil.MakeMaterial("Player", new Color(0.3f, 0.7f, 1f));
+            Object.DestroyImmediate(go.GetComponent<Collider>());
+
+            var cc = go.AddComponent<CharacterController>();
+            cc.height = 2f; cc.radius = 0.5f; cc.center = Vector3.zero;
+
+            go.AddComponent<Health>();
+            go.AddComponent<PlayerHealth>();
+            go.AddComponent<PlayerController>();
+            go.AddComponent<PlayerExperience>();
+            weapon = go.AddComponent<AutoWeapon>();
+            BuilderUtil.SetRef(weapon, "projectilePrefab", projectile);
+            return go;
+        }
+
+        static void BuildCamera(Transform target)
+        {
+            var go = new GameObject("Main Camera", typeof(Camera), typeof(AudioListener));
+            go.tag = "MainCamera";
+            var cam = go.GetComponent<Camera>();
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.03f, 0.03f, 0.06f);
+            go.transform.position = target.position + new Vector3(0f, 18f, -6f);
+            go.transform.LookAt(target.position);
+            var follow = go.AddComponent<TopDownCamera>();
+            BuilderUtil.SetRef(follow, "target", target);
+        }
+
+        static void BuildManagers(GameObject player, AutoWeapon weapon, AssetBuilder.Result assets, out UpgradeManager upgrades)
+        {
+            var gm = new GameObject("GameManager").AddComponent<GameManager>();
+            BuilderUtil.SetFloat(gm, "runDurationSeconds", TestRunSeconds);
+
+            var spawner = new GameObject("WaveSpawner").AddComponent<WaveSpawner>();
+            BuilderUtil.SetRef(spawner, "player", player.transform);
+            BuilderUtil.SetRefArray(spawner, "archetypes", assets.Enemies.ToArray());
+
+            upgrades = new GameObject("UpgradeManager").AddComponent<UpgradeManager>();
+            BuilderUtil.SetRefArray(upgrades, "pool", assets.Upgrades.ToArray());
+            BuilderUtil.SetRef(upgrades, "weapon", weapon);
+            BuilderUtil.SetRef(upgrades, "controller", player.GetComponent<PlayerController>());
+            BuilderUtil.SetRef(upgrades, "playerHealth", player.GetComponent<Health>());
+            BuilderUtil.SetRef(upgrades, "experience", player.GetComponent<PlayerExperience>());
+        }
+
+        static void AddToBuildSettings(string path)
+        {
+            var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+            if (!scenes.Exists(s => s.path == path))
+                scenes.Insert(0, new EditorBuildSettingsScene(path, true));
+            EditorBuildSettings.scenes = scenes.ToArray();
+        }
+    }
+}

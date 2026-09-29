@@ -1,6 +1,6 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using GamingApp.Core;
 
 namespace GamingApp.UI
@@ -9,8 +9,8 @@ namespace GamingApp.UI
     public class ResultPanel : MonoBehaviour
     {
         [SerializeField] GameObject root;
-        [SerializeField] TMP_Text titleText;
-        [SerializeField] TMP_Text detailsText;
+        [SerializeField] Text titleText;
+        [SerializeField] Text detailsText;
 
         void Awake() => root.SetActive(false);
         void Start() => GameManager.Instance.StateChanged += OnStateChanged;

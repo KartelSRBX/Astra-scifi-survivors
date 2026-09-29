@@ -1,12 +1,23 @@
 # GamingApp — SciFi survivors-like (Android)
 
 Unity skeleton for the roadmap in `SciFi рогалик с волнами (Android) — Roadmap.md`.
-Scripts only: no scene, prefabs or art yet. Nothing here has been opened in Unity or compiled.
+Scripts plus an editor tool that generates a playable placeholder scene. No real art yet.
 
 ## Open the project
 1. Install Unity 6 (6000.0 LTS) with the Android Build Support module.
 2. Unity Hub > Add > select this folder. `ProjectSettings/ProjectVersion.txt` is a placeholder; Unity will offer to upgrade/fix it.
 3. Input uses the legacy `UnityEngine.Input` (touch, mouse fallback in the editor), so keep *Active Input Handling* on "Input Manager (Old)" or "Both".
+
+## Quick start: playable test scene
+1. Open the project in Unity and wait for the import to finish. If `Assets/Scripts` throws compile errors, fix them first (see "Status").
+2. Menu **Tools > GamingApp > Build Test Scene**. It creates placeholder prefabs (primitives), enemy/upgrade data in `Assets/Data`, and `Assets/Scenes/Main.unity`, and applies Android player settings.
+3. Open `Main.unity` and press Play. Hold the mouse (or a finger on device) and drag to move; the character auto-fires at the nearest enemy. Kill enemies, pick up blue XP gems, choose an upgrade on level-up. The run lasts 5 minutes in the test build (`TestRunSeconds` in `Editor/SceneBuilder.cs`; the roadmap target is 10-15).
+4. To test on a phone: File > Build Profiles > Android > Build And Run (needs the Android module + a device with USB debugging).
+
+The builder is safe to re-run; it regenerates the scene and assets. The UI uses legacy uGUI `Text` (no TextMeshPro import needed); switch to TMP together with the localization work.
+
+## Status
+Written without Unity available, so it has never been compiled or run. Expect to fix small compile or setup errors on first open; report the Console output and it can be patched.
 
 ## Layout (`Assets/Scripts`)
 | Folder | Scripts |
@@ -16,8 +27,9 @@ Scripts only: no scene, prefabs or art yet. Nothing here has been opened in Unit
 | Weapons | `AutoWeapon` (auto-target), `Projectile`, `UpgradeData` (ScriptableObject), `UpgradeManager` |
 | Enemies | `EnemyData` (ScriptableObject), `Enemy`, `WaveSpawner`, `XpGem` |
 | UI | `Hud`, `LevelUpPanel`, `ResultPanel` |
+| Editor | `SceneBuilder` (menu entry), `AssetBuilder`, `UiBuilder`, `AndroidSettings`, `BuilderUtil` |
 
-## Building the first scene (manual, in the editor)
+## Building the scene by hand (only if you skip the builder)
 1. Ground plane + Directional Light. Camera with `TopDownCamera` targeting the player.
 2. Player: capsule with `CharacterController`, `Health`, `PlayerHealth`, `PlayerController`, `PlayerExperience`, and a child/same-object `AutoWeapon` (assign a projectile prefab).
 3. Projectile prefab: small sphere, trigger `SphereCollider`, kinematic `Rigidbody`, `Projectile`.
