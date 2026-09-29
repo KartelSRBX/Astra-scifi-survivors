@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 using GamingApp.Core;
+using GamingApp.Meta;
 
 namespace GamingApp.UI
 {
-    /// <summary>Main menu: bottom nav (character, inventory, start, upgrades, forge), currencies, settings.</summary>
+    /// <summary>Main menu: start, settings, currencies, selected ship avatar, placeholder screens.</summary>
     public class MenuController : MonoBehaviour
     {
         [SerializeField] Button playButton;
@@ -14,6 +15,8 @@ namespace GamingApp.UI
         [SerializeField] Text bestText;
         [SerializeField] Text biomassText;
         [SerializeField] Text coresText;
+        [SerializeField] Image avatarShip;
+        [SerializeField] Text pilotLevelText;
 
         [SerializeField] Button[] navButtons;
         [SerializeField] string[] navTitles;
@@ -43,8 +46,31 @@ namespace GamingApp.UI
 
             float best = GameManager.BestTime;
             bestText.text = best > 0f ? $"{(int)best / 60:00}:{(int)best % 60:00}" : "--:--";
+            Wallet.Changed += RefreshWallet;
+            Profile.Changed += RefreshShip;
+            RefreshWallet();
+            RefreshShip();
+        }
+
+        void OnDestroy()
+        {
+            Wallet.Changed -= RefreshWallet;
+            Profile.Changed -= RefreshShip;
+        }
+
+        void RefreshWallet()
+        {
             biomassText.text = Wallet.Biomass.ToString();
             coresText.text = Wallet.Cores.ToString();
+        }
+
+        void RefreshShip()
+        {
+            var db = GameDatabase.Get();
+            var ship = db != null ? db.Ship(Profile.SelectedShip) : null;
+            if (ship == null) return;
+            avatarShip.sprite = ship.sprite;
+            pilotLevelText.text = Profile.ShipLevel(ship.id).ToString();
         }
     }
 }

@@ -145,7 +145,7 @@ namespace GamingApp.EditorTools
             var prt = (RectTransform)panel.transform;
             var title = MakeText(prt, "Title", "Result", 104, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0, 380), new Vector2(900, 140));
             title.fontStyle = FontStyle.Bold;
-            var details = MakeText(prt, "Details", "", 60, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0, 130), new Vector2(900, 240));
+            var details = MakeText(prt, "Details", "", 44, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0, 110), new Vector2(980, 300));
             var restart = MakeButton(prt, "Restart", new Vector2(0.5f, 0.5f), new Vector2(0, -160), new Vector2(640, 150), UiTheme.Violet, "PLAY AGAIN", 60);
             var menu = MakeButton(prt, "Menu", new Vector2(0.5f, 0.5f), new Vector2(0, -350), new Vector2(640, 150), UiTheme.PanelLight, "MENU", 60);
 

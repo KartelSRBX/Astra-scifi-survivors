@@ -67,11 +67,9 @@ namespace GamingApp.EditorTools
 
         static GameObject BuildPlayer(Projectile projectile, out AutoWeapon weapon)
         {
-            var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            go.name = "Player";
+            var go = new GameObject("Player");
             go.transform.position = new Vector3(0f, 1f, 0f);
-            go.GetComponent<Renderer>().sharedMaterial = BuilderUtil.MakeMaterial("Player", new Color(0.13f, 0.83f, 0.77f));
-            Object.DestroyImmediate(go.GetComponent<Collider>());
+            var visual = AssetBuilder.AddVisual(go, "ship_corvette", 2f, 1f, AssetBuilder.OrderPlayer);
 
             var cc = go.AddComponent<CharacterController>();
             cc.height = 2f; cc.radius = 0.5f; cc.center = Vector3.zero;
@@ -82,6 +80,7 @@ namespace GamingApp.EditorTools
             go.AddComponent<PlayerExperience>();
             weapon = go.AddComponent<AutoWeapon>();
             BuilderUtil.SetRef(weapon, "projectilePrefab", projectile);
+            BuilderUtil.SetRef(go.AddComponent<PlayerLoadout>(), "visual", visual);
             return go;
         }
 

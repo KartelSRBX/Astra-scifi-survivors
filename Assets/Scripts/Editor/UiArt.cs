@@ -68,7 +68,7 @@ namespace GamingApp.EditorTools
     }
 
     /// <summary>Procedural UI art. Engine-independent so it can be rendered and previewed outside Unity.</summary>
-    public static class UiArt
+    public static partial class UiArt
     {
         public static readonly string[] All =
         {
@@ -129,7 +129,7 @@ namespace GamingApp.EditorTools
                     return Min(Ring(Circle(p, c, 42), 10), Min(Seg(p, c, c + new V2(0, 26), 5), Seg(p, c, c + new V2(20, -8), 5)));
                 });
             }
-            throw new ArgumentException("Unknown art: " + name);
+            return MakeGame(name);
         }
 
         // ---------- math ----------

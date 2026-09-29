@@ -7,7 +7,7 @@ using GamingApp.UI;
 namespace GamingApp.EditorTools
 {
     /// <summary>Builds the main menu scene: animated space backdrop, chapter showcase, top bar, bottom nav dock.</summary>
-    static class MenuBuilder
+    static partial class MenuBuilder
     {
         static readonly Color Black = Color.black;
         static readonly Color SoftViolet = new Color(0.72f, 0.56f, 1f);
@@ -33,7 +33,7 @@ namespace GamingApp.EditorTools
             var nextChapter = BuildStage(stage, runSeconds, out var bestText);
 
             var topLeft = Node(safe, "TopLeft", new Vector2(0f, 1f), Vector2.zero);
-            BuildProfile(topLeft);
+            var avatarShip = BuildProfile(topLeft, out var pilotLevel);
             var topRight = Node(safe, "TopRight", new Vector2(1f, 1f), Vector2.zero);
             var cores = Currency(topRight, "Cores", "cur_cores", new Vector2(-165, -102));
             var biomass = Currency(topRight, "Biomass", "cur_biomass", new Vector2(-435, -102));
@@ -54,6 +54,10 @@ namespace GamingApp.EditorTools
             Img(phCard, "Divider", "line_glow", A(UiTheme.Teal, 0.8f), new Vector2(0, 5), new Vector2(520, 12));
             var phClose = UiBuilder.MakeButton(phCard, "Close", new Vector2(0.5f, 0.5f), new Vector2(0, -170), new Vector2(480, 130), UiTheme.Violet, "BACK", 56);
 
+            BuildHangar(root, host, (Button)navButtons[0]);
+            BuildInventory(root, host, (Button)navButtons[1]);
+            navButtons.RemoveRange(0, 2);
+            navTitles.RemoveRange(0, 2);
             navButtons.Add(nextChapter);
             navTitles.Add("CHAPTER 2");
 
@@ -65,6 +69,8 @@ namespace GamingApp.EditorTools
             BuilderUtil.SetRef(mc, "bestText", bestText);
             BuilderUtil.SetRef(mc, "biomassText", biomass);
             BuilderUtil.SetRef(mc, "coresText", cores);
+            BuilderUtil.SetRef(mc, "avatarShip", avatarShip);
+            BuilderUtil.SetRef(mc, "pilotLevelText", pilotLevel);
             BuilderUtil.SetRefArray(mc, "navButtons", navButtons.ToArray());
             var so = new SerializedObject(mc);
             var tp = so.FindProperty("navTitles");
@@ -149,20 +155,22 @@ namespace GamingApp.EditorTools
             return next;
         }
 
-        static void BuildProfile(RectTransform tl)
+        static Image BuildProfile(RectTransform tl, out Text level)
         {
             var c = new Vector2(115, -115);
             var glow = Motion(Img(tl, "AvatarGlow", "glow", A(UiTheme.Teal, 0.3f), c, new Vector2(240, 240)));
             glow.alphaMin = 0.5f; glow.alphaSpeed = 1.3f;
             Img(tl, "Avatar", "disc", UiTheme.PanelLight, c, new Vector2(150, 150));
             Img(tl, "AvatarRing", "ring_thin", A(UiTheme.Teal, 0.9f), c, new Vector2(158, 158));
-            Img(tl, "AvatarIcon", "ico_character", A(UiTheme.White, 0.9f), c, new Vector2(88, 88));
+            var ship = Img(tl, "AvatarShip", "ship_corvette", Color.white, c, new Vector2(120, 120));
+            ship.preserveAspect = true;
             var badge = Img(tl, "LevelBadge", "disc", UiTheme.Violet, c + new Vector2(55, -55), new Vector2(56, 56));
-            Label(badge.rectTransform, "Level", "1", 32, UiTheme.White, Vector2.zero, new Vector2(56, 56));
+            level = Label(badge.rectTransform, "Level", "1", 32, UiTheme.White, Vector2.zero, new Vector2(56, 56));
 
             Label(tl, "Name", "PILOT", 42, UiTheme.White, new Vector2(360, -92), new Vector2(300, 60), TextAnchor.MiddleLeft, shadow: true);
             Img(tl, "XpBack", "pill", UiTheme.BarBackground, new Vector2(330, -150), new Vector2(240, 26), sliced: true);
             Img(tl, "XpFill", "pill", UiTheme.Teal, new Vector2(255, -150), new Vector2(90, 26), sliced: true);
+            return ship;
         }
 
         static Text Currency(RectTransform parent, string name, string icon, Vector2 pos)
@@ -187,7 +195,7 @@ namespace GamingApp.EditorTools
             titles = new System.Collections.Generic.List<string>();
             var items = new (float x, string title, string label, string icon, Color color)[]
             {
-                (-400, "CHARACTER", "CHARACTER", "ico_character", UiTheme.Teal),
+                (-400, "HANGAR", "HANGAR", "ico_ship", UiTheme.Teal),
                 (-210, "INVENTORY", "INVENTORY", "ico_inventory", SoftBlue),
                 (210, "UPGRADES", "UPGRADES", "ico_upgrades", SoftViolet),
                 (400, "FORGE", "FORGE", "ico_forge", UiTheme.White),

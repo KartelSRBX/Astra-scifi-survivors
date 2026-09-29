@@ -15,6 +15,9 @@ namespace GamingApp.Enemies
         Transform target;
         float nextShotTime;
         float nextContactTime;
+        Transform visual;
+        Vector3 visualScale;
+        float punch;
 
         public EnemyData Data => data;
 
@@ -22,6 +25,9 @@ namespace GamingApp.Enemies
         {
             health = GetComponent<Health>();
             health.Died += OnDied;
+            health.Changed += (_, _) => punch = 1f;
+            visual = transform.Find("Visual");
+            if (visual != null) visualScale = visual.localScale;
         }
 
         /// <summary>Called by the spawner right after instantiation.</summary>
@@ -34,6 +40,11 @@ namespace GamingApp.Enemies
 
         void Update()
         {
+            if (visual != null && punch > 0f)
+            {
+                punch = Mathf.Max(0f, punch - Time.deltaTime * 8f);
+                visual.localScale = visualScale * (1f + 0.18f * punch);
+            }
             if (data == null || target == null) return;
 
             Vector3 toTarget = target.position - transform.position;
@@ -77,6 +88,7 @@ namespace GamingApp.Enemies
 
         void OnDied(Health _)
         {
+            if (GameManager.Instance != null && data != null) GameManager.Instance.RegisterKill(data.isMiniBoss);
             if (xpGemPrefab != null && data != null)
             {
                 var gem = Instantiate(xpGemPrefab, transform.position, Quaternion.identity);

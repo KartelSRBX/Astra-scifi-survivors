@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using GamingApp.Meta;
 
 namespace GamingApp.Core
 {
@@ -17,6 +18,9 @@ namespace GamingApp.Core
         public float Remaining => Mathf.Max(0f, runDurationSeconds - Elapsed);
         /// <summary>0..1, grows over the run; drives wave difficulty.</summary>
         public float Progress => Mathf.Clamp01(Elapsed / runDurationSeconds);
+
+        public int Kills { get; private set; }
+        public int BossKills { get; private set; }
 
         public event Action<RunState> StateChanged;
 
@@ -42,8 +46,18 @@ namespace GamingApp.Core
             if (State == next) return;
             State = next;
             Time.timeScale = next == RunState.Playing ? 1f : 0f;
-            if (next == RunState.Won || next == RunState.Lost) SaveBestTime();
+            if (next == RunState.Won || next == RunState.Lost)
+            {
+                SaveBestTime();
+                RunRewards.Grant(Kills, BossKills, Elapsed, next == RunState.Won);
+            }
             StateChanged?.Invoke(next);
+        }
+
+        public void RegisterKill(bool boss)
+        {
+            Kills++;
+            if (boss) BossKills++;
         }
 
         public void PlayerDied() => SetState(RunState.Lost);

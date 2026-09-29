@@ -38,7 +38,8 @@ namespace GamingApp.EditorTools
             imp.textureType = TextureImporterType.Sprite;
             imp.spriteImportMode = SpriteImportMode.Single;
             imp.alphaIsTransparency = true;
-            imp.mipmapEnabled = false;
+            // World-space sprites are minified by the 3D camera and need mips to avoid shimmering.
+            imp.mipmapEnabled = art.Name.StartsWith("enemy_") || art.Name.StartsWith("ship_") || art.Name.StartsWith("bolt_") || art.Name.StartsWith("gem_");
             imp.wrapMode = TextureWrapMode.Clamp;
             imp.textureCompression = TextureImporterCompression.Uncompressed;
             imp.spriteBorder = new Vector4(art.Border[0], art.Border[1], art.Border[2], art.Border[3]);

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using GamingApp.Core;
+using GamingApp.Meta;
 
 namespace GamingApp.UI
 {
@@ -30,7 +31,10 @@ namespace GamingApp.UI
             root.SetActive(true);
             titleText.text = state == RunState.Won ? "Survived!" : "You died"; // TODO: localize
             titleText.color = state == RunState.Won ? UiTheme.Teal : UiTheme.Violet;
-            detailsText.text = $"Time: {Format(gm.Elapsed)}\nBest: {Format(GameManager.BestTime)}";
+            var r = RunRewards.Last;
+            string loot = $"<color=#22D4C4>+{r.biomass} Biomass</color>   <color=#AE6BFF>+{r.cores} Cores</color>";
+            if (r.item != null) loot += $"\n<color=#{ColorUtility.ToHtmlStringRGB(UiTheme.RarityColor(r.item.rarity))}>Found: {r.item.displayName}</color>";
+            detailsText.text = $"Time {Format(gm.Elapsed)}   Best {Format(GameManager.BestTime)}\nKills {gm.Kills}\n{loot}";
         }
 
         static string Format(float s) => $"{(int)s / 60:00}:{(int)s % 60:00}";

@@ -26,6 +26,7 @@ namespace GamingApp.Player
 
         public Vector3 MoveDirection { get; private set; }
         public float SpeedMultiplier { get; set; } = 1f;
+        public float BaseSpeed { get => moveSpeed; set => moveSpeed = value; }
 
         void Awake() => controller = GetComponent<CharacterController>();
 

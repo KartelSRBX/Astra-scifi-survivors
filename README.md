@@ -48,3 +48,9 @@ result screen with menu button, floating on-screen joystick. Palette lives in `A
 Rebuild everything with Tools > GamingApp > Build Test Scene, then Play from the Menu scene.
 All menu art is procedural (`Assets/Scripts/Editor/UiArt.cs`, engine-independent) and written to
 `Assets/Art/UI/Generated` by `UiSprites` on each build.
+
+## Ships, enemies, items
+- Player is a warship. Ships (Corvette -> Frigate -> Destroyer -> Cruiser -> Dreadnought) are `ShipData`; bought and upgraded (Lv 1-10) in the Hangar.
+- 10 enemy tiers, black/red: the darker the hull, the stronger the enemy. Tier 9 (Warden) and 10 (Leviathan) are bosses.
+- Items (`ItemData`): Weapon / Hull / Engine / Module slots, 4 rarities. Equip in Inventory. Runs award Biomass, Cores and a chance for an item.
+- Everything is listed in `Assets/Resources/GameDatabase.asset`; progress is saved by `Profile` (PlayerPrefs JSON).
