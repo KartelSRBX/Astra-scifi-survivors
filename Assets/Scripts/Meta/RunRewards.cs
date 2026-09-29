@@ -20,7 +20,7 @@ namespace GamingApp.Meta
         {
             var r = new Result
             {
-                biomass = Mathf.RoundToInt((kills + seconds / 5f) * (won ? 1.5f : 1f)),
+                biomass = Mathf.RoundToInt((kills + seconds / 5f) * (won ? 1.5f : 1f) * Difficulty()),
                 cores = bossKills * 5 + (won ? 5 : 0),
             };
             var db = GameDatabase.Get();
@@ -34,6 +34,12 @@ namespace GamingApp.Meta
             PlayerPrefs.Save();
             Last = r;
             return r;
+        }
+
+        static float Difficulty()
+        {
+            var sys = GamingApp.Weapons.RunSetup.System;
+            return sys != null ? sys.Difficulty : 1f;
         }
 
         static ItemData RollItem(GameDatabase db)

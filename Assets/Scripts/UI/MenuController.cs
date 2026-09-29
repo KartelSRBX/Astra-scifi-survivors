@@ -11,7 +11,6 @@ namespace GamingApp.UI
         [SerializeField] Button settingsButton;
         [SerializeField] Button closeSettingsButton;
         [SerializeField] GameObject settingsPanel;
-        [SerializeField] Text bestText;
         [SerializeField] Text biomassText;
         [SerializeField] Text coresText;
         [SerializeField] Image avatarShip;
@@ -42,8 +41,6 @@ namespace GamingApp.UI
                 });
             }
 
-            float best = GameManager.BestTime;
-            bestText.text = best > 0f ? $"{(int)best / 60:00}:{(int)best % 60:00}" : "--:--";
             Wallet.Changed += RefreshWallet;
             Profile.Changed += RefreshShip;
             RefreshWallet();

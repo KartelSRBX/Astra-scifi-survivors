@@ -34,7 +34,17 @@ namespace GamingApp.UI
             var r = RunRewards.Last;
             string loot = $"<color=#22D4C4>+{r.biomass} Biomass</color>   <color=#AE6BFF>+{r.cores} Cores</color>";
             if (r.item != null) loot += $"\n<color=#{ColorUtility.ToHtmlStringRGB(UiTheme.RarityColor(r.item.rarity))}>Found: {r.item.displayName}</color>";
-            detailsText.text = $"Time {Format(gm.Elapsed)}   Best {Format(GameManager.BestTime)}\nKills {gm.Kills}\n{loot}";
+            string sysLine = "";
+            var sys = GamingApp.Weapons.RunSetup.System;
+            if (sys != null)
+            {
+                float clear = Profile.SystemClearance(sys.index);
+                sysLine = clear >= 1f
+                    ? $"<color=#22D4C4>{sys.displayName.ToUpper()} CLEARED</color>" + (state == RunState.Won && sys.index < GameDatabase.Get().systems.Count - 1 ? "  ·  next system unlocked" : "")
+                    : $"{sys.displayName.ToUpper()}: threat cleared {clear * 100f:0}%";
+                sysLine += "\n";
+            }
+            detailsText.text = $"{sysLine}Time {Format(gm.Elapsed)}   Kills {gm.Kills}\n{loot}";
         }
 
         static string Format(float s) => $"{(int)s / 60:00}:{(int)s % 60:00}";

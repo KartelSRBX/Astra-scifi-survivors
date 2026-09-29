@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace GamingApp.EditorTools
 {
@@ -49,7 +49,7 @@ namespace GamingApp.EditorTools
                 case "ico_w_hdrones": return Icon(name, p => Min(Min(Poly(p, Hex(P(40, 58), 22)) - 2f, Poly(p, Hex(P(88, 58), 22)) - 2f),
                     Min(Box(p, P(40, 92), P(4, 12), 2), Box(p, P(88, 92), P(4, 12), 2))));
             }
-            throw new ArgumentException("Unknown art: " + name);
+            return MakeSystemArt(name);
         }
 
         static Style Tinted(C accent, C hull) => new Style

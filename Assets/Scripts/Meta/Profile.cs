@@ -16,6 +16,8 @@ namespace GamingApp.Meta
             public string ship = "corvette";
             public List<string> items = new();
             public int[] equipped = { -1, -1, -1, -1 }; // index into items, per ItemSlot
+            public List<float> systemClearance = new(); // 0..1 per star system
+            public List<float> systemBest = new();      // best survival seconds per system
         }
 
         const string Key = "profile_v1";
@@ -80,6 +82,21 @@ namespace GamingApp.Meta
             int i = D.shipLevelIds.IndexOf(id);
             if (i < 0) { D.shipLevelIds.Add(id); D.shipLevels.Add(level); }
             else D.shipLevels[i] = level;
+            Save();
+        }
+
+        // ---- star systems ----
+        public static float SystemClearance(int i) => i >= 0 && i < D.systemClearance.Count ? D.systemClearance[i] : 0f;
+        public static float SystemBest(int i) => i >= 0 && i < D.systemBest.Count ? D.systemBest[i] : 0f;
+        public static bool IsSystemUnlocked(int i) => i == 0 || SystemClearance(i - 1) >= 1f;
+
+        /// <summary>Clearance keeps the best result: surviving the full run clears the system (100%).</summary>
+        public static void RecordSystem(int i, float clearance, float seconds)
+        {
+            while (D.systemClearance.Count <= i) D.systemClearance.Add(0f);
+            while (D.systemBest.Count <= i) D.systemBest.Add(0f);
+            D.systemClearance[i] = Mathf.Max(D.systemClearance[i], Mathf.Clamp01(clearance));
+            D.systemBest[i] = Mathf.Max(D.systemBest[i], seconds);
             Save();
         }
 

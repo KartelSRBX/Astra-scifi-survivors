@@ -60,3 +60,8 @@ All menu art is procedural (`Assets/Scripts/Editor/UiArt.cs`, engine-independent
 - Player shots home in on the nearest enemy; missiles explode (AoE), plasma pierces, drones orbit and fire on their own.
 - Each weapon has 5 in-run steps offered on level-up (marked WEAPON), on top of generic upgrades like +% damage.
 - Weapon-slot items now tune whichever gun is picked (damage, fire rate, +projectile).
+
+## Star systems (levels)
+- 10 star systems (`StarSystemData`), each with its own nebula backdrop, showcase art and battle floor. Enemies get +15% HP/damage per system; rewards scale the same.
+- Threat clearance per system = best run progress (full survival = 100%). Clearing a system unlocks the next.
+- Juice: enemy death bursts, screen shake (hits, bosses), red damage flash, system intro and boss warning banners.

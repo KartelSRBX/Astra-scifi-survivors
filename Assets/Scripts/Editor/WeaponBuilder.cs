@@ -10,11 +10,9 @@ namespace GamingApp.EditorTools
     {
         const string Dir = BuilderUtil.DataDir + "/Weapons";
 
-        public static List<WeaponDef> BuildAll(Projectile blasterBolt)
+        public static List<WeaponDef> BuildAll(Projectile blasterBolt, FxBurst explosion, FxBurst spark)
         {
             BuilderUtil.EnsureDir(Dir);
-            var explosion = Fx("Fx_Explosion", "fx_explosion", 0.4f, 0.3f);
-            var spark = Fx("Fx_Spark", "fx_spark", 0.18f, 0.5f);
             var beamMat = BeamMaterial();
 
             var ciws = Shot("Proj_Ciws", "bullet_ciws", 0.2f, 0.22f);
@@ -157,7 +155,7 @@ namespace GamingApp.EditorTools
             return BuilderUtil.SavePrefab<Drone>(go, name);
         }
 
-        static FxBurst Fx(string name, string sprite, float duration, float startScale)
+        public static FxBurst Fx(string name, string sprite, float duration, float startScale)
         {
             var go = new GameObject(name);
             go.transform.rotation = Quaternion.Euler(90f, 0f, 0f);

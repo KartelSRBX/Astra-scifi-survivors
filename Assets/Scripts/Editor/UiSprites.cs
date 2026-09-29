@@ -22,6 +22,25 @@ namespace GamingApp.EditorTools
             return AssetDatabase.LoadAssetAtPath<Sprite>(path);
         }
 
+        /// <summary>Tileable world texture (floors): default texture type, repeat wrap, mipmaps.</summary>
+        public static Texture2D GetTexture(string name)
+        {
+            string path = $"{Dir}/{name}.png";
+            if (!written.Contains(name) || !File.Exists(path))
+            {
+                Write(UiArt.Make(name), path);
+                var imp = (TextureImporter)AssetImporter.GetAtPath(path);
+                imp.textureType = TextureImporterType.Default;
+                imp.wrapMode = TextureWrapMode.Repeat;
+                imp.mipmapEnabled = true;
+                imp.alphaIsTransparency = false;
+                imp.textureCompression = TextureImporterCompression.CompressedHQ;
+                imp.SaveAndReimport();
+                written.Add(name);
+            }
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+        }
+
         static void Write(Art art, string path)
         {
             BuilderUtil.EnsureDir(Dir);

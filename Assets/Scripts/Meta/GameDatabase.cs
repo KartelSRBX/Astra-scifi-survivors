@@ -10,6 +10,7 @@ namespace GamingApp.Meta
         public List<ShipData> ships = new();
         public List<ItemData> items = new();
         public List<WeaponDef> weapons = new();
+        public List<StarSystemData> systems = new();
 
         static GameDatabase instance;
         public static GameDatabase Get()

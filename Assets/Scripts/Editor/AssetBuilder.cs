@@ -22,6 +22,8 @@ namespace GamingApp.EditorTools
         public const float GroundY = 0.1f;
         public const int OrderGem = 0, OrderEnemy = 1, OrderPlayer = 3, OrderProjectile = 4;
 
+        static FxBurst deathFx;
+
         public static Result BuildAll()
         {
             BuilderUtil.EnsureDir(BuilderUtil.DataDir);
@@ -29,6 +31,9 @@ namespace GamingApp.EditorTools
             var r = new Result();
 
             var gem = BuildXpGem();
+            var explosion = WeaponBuilder.Fx("Fx_Explosion", "fx_explosion", 0.4f, 0.3f);
+            var spark = WeaponBuilder.Fx("Fx_Spark", "fx_spark", 0.18f, 0.5f);
+            deathFx = explosion;
             r.PlayerProjectile = BuildProjectile("Projectile_Player", "bolt_player", 0.25f, 0.9f);
             var enemyProjectile = BuildProjectile("Projectile_Enemy", "bolt_enemy", 0.3f, 1.1f);
 
@@ -52,7 +57,7 @@ namespace GamingApp.EditorTools
             r.Upgrades.Add(BuildUpgrade("Health", "Plating: hull +20%", "More hull, and repairs the difference.", false, UpgradeStat.MaxHealth, 0.2f, 5));
             r.Upgrades.Add(BuildUpgrade("Magnet", "Tractor beam +1.5", "Collect XP from further away.", false, UpgradeStat.PickupRadius, 1.5f, 4));
 
-            r.Database = BuildDatabase(WeaponBuilder.BuildAll(r.PlayerProjectile));
+            r.Database = BuildDatabase(WeaponBuilder.BuildAll(r.PlayerProjectile, explosion, spark));
             AssetDatabase.SaveAssets();
             return r;
         }
@@ -120,6 +125,7 @@ namespace GamingApp.EditorTools
             go.AddComponent<GamingApp.Core.Health>();
             var enemy = go.AddComponent<Enemy>();
             BuilderUtil.SetRef(enemy, "xpGemPrefab", gem);
+            BuilderUtil.SetRef(enemy, "deathFx", deathFx);
             var prefab = BuilderUtil.SavePrefab(go, "Enemy_" + name);
 
             var data = ScriptableObject.CreateInstance<EnemyData>();
@@ -161,6 +167,22 @@ namespace GamingApp.EditorTools
 
             var db = ScriptableObject.CreateInstance<GameDatabase>();
             db.weapons.AddRange(weapons);
+            BuilderUtil.EnsureDir(BuilderUtil.DataDir + "/Systems");
+            for (int i = 0; i < UiArt.Systems.Length; i++)
+            {
+                var p = UiArt.Systems[i];
+                var sys = ScriptableObject.CreateInstance<StarSystemData>();
+                sys.index = i;
+                sys.displayName = p.name;
+                sys.starColor = new Color(p.star.r, p.star.g, p.star.b);
+                sys.floorColor = new Color(p.floor.r, p.floor.g, p.floor.b);
+                sys.systemSprite = UiSprites.Get($"system_{i + 1:00}");
+                sys.nebulaA = UiSprites.Get($"neb_{i + 1:00}_a");
+                sys.nebulaB = UiSprites.Get($"neb_{i + 1:00}_b");
+                sys.floor = UiSprites.GetTexture($"floor_{i + 1:00}");
+                AssetDatabase.CreateAsset(sys, $"{BuilderUtil.DataDir}/Systems/System_{i + 1:00}.asset");
+                db.systems.Add(sys);
+            }
             //                     id            name           class                 size  hp    speed dmg   rate  bio   cores
             db.ships.Add(Ship("corvette",    "Corvette",    "Light escort",        2.0f, 100f, 5.5f, 1f,   1f,   0,    0));
             db.ships.Add(Ship("frigate",     "Frigate",     "Multi-role patrol",   2.3f, 140f, 5.3f, 1.15f, 1.05f, 600, 0));

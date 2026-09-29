@@ -38,10 +38,12 @@ namespace GamingApp.EditorTools
         public static void Build(PlayerController player, Health playerHealth, PlayerExperience xp, PlayerWeapon weapon, UpgradeManager upgrades)
         {
             var rt = CreateCanvas(out var canvasGo);
+            BuildDamageFlash(rt, canvasGo, playerHealth);
             BuildJoystick(rt, canvasGo, player);
             BuildHud(rt, canvasGo, playerHealth, xp, weapon);
             BuildPause(rt, canvasGo);
             BuildLevelUp(rt, canvasGo, upgrades);
+            BuildBanner(rt);
             BuildResult(rt, canvasGo);
         }
 
@@ -67,6 +69,50 @@ namespace GamingApp.EditorTools
             weaponText.fontStyle = FontStyle.Bold;
             BuilderUtil.SetRef(hud, "weapon", weapon);
             BuilderUtil.SetRef(hud, "weaponText", weaponText);
+        }
+
+        // ---- Damage flash & banner ----
+        static void BuildDamageFlash(RectTransform parent, GameObject host, Health hp)
+        {
+            var go = new GameObject("DamageFlash", typeof(RectTransform), typeof(Image));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(parent, false);
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+            rt.offsetMin = rt.offsetMax = Vector2.zero;
+            var img = go.GetComponent<Image>();
+            img.sprite = UiSprites.Get("vignette");
+            img.color = new Color(1f, 0.1f, 0.15f, 0f);
+            img.raycastTarget = false;
+            var df = host.AddComponent<DamageFlash>();
+            BuilderUtil.SetRef(df, "playerHealth", hp);
+            BuilderUtil.SetRef(df, "vignette", img);
+        }
+
+        static void BuildBanner(RectTransform parent)
+        {
+            var go = new GameObject("Banner", typeof(RectTransform), typeof(CanvasGroup));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(parent, false);
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(0, 420);
+            rt.sizeDelta = new Vector2(1000, 260);
+            var cg = go.GetComponent<CanvasGroup>();
+            cg.blocksRaycasts = false;
+            cg.interactable = false;
+            var back = MakeImage(rt, "Back", UiSprites.Get("glow"), new Color(0f, 0f, 0f, 0.55f), new Vector2(1100, 360));
+            var title = MakeText(rt, "Title", "", 96, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0, 45), new Vector2(1000, 120));
+            title.fontStyle = FontStyle.Bold;
+            var shadow = title.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0, 0.7f);
+            shadow.effectDistance = new Vector2(0, -5);
+            var line = MakeImage(rt, "Line", UiSprites.Get("line_glow"), Color.white, new Vector2(620, 14));
+            line.anchoredPosition = new Vector2(0, -20);
+            var sub = MakeText(rt, "Subtitle", "", 44, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0, -70), new Vector2(1000, 70));
+            sub.color = UiTheme.White;
+            var banner = go.AddComponent<Banner>();
+            BuilderUtil.SetRef(banner, "titleText", title);
+            BuilderUtil.SetRef(banner, "subtitleText", sub);
+            BuilderUtil.SetRef(banner, "line", line.GetComponent<Image>());
         }
 
         // ---- Joystick ----

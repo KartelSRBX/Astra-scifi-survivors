@@ -24,13 +24,13 @@ namespace GamingApp.EditorTools
             cam.backgroundColor = UiTheme.Background;
 
             var root = UiBuilder.CreateCanvas(out var host);
-            BuildBackdrop(Stretch(root, "Backdrop"));
+            var nebulae = BuildBackdrop(Stretch(root, "Backdrop"));
 
             var safe = Stretch(root, "SafeArea");
             safe.gameObject.AddComponent<SafeAreaFitter>();
 
             var stage = Node(safe, "Stage", new Vector2(0.5f, 0.5f), new Vector2(0, 80));
-            var nextChapter = BuildStage(stage, runSeconds, out var bestText);
+            var stageRefs = BuildStage(stage);
 
             var topLeft = Node(safe, "TopLeft", new Vector2(0f, 1f), Vector2.zero);
             var avatarShip = BuildProfile(topLeft, out var pilotLevel);
@@ -59,14 +59,29 @@ namespace GamingApp.EditorTools
             BuildWeaponSelect(root, host, play);
             navButtons.RemoveRange(0, 2);
             navTitles.RemoveRange(0, 2);
-            navButtons.Add(nextChapter);
-            navTitles.Add("CHAPTER 2");
+
+            var sel = host.AddComponent<SystemSelector>();
+            BuilderUtil.SetRef(sel, "prevButton", stageRefs.prev);
+            BuilderUtil.SetRef(sel, "nextButton", stageRefs.next);
+            BuilderUtil.SetRef(sel, "startButton", play);
+            BuilderUtil.SetRef(sel, "systemImage", stageRefs.system);
+            BuilderUtil.SetRef(sel, "glow", stageRefs.glow);
+            BuilderUtil.SetRef(sel, "nebulaA", nebulae.a);
+            BuilderUtil.SetRef(sel, "nebulaB", nebulae.b);
+            BuilderUtil.SetRef(sel, "numberText", stageRefs.number);
+            BuilderUtil.SetRef(sel, "nameText", stageRefs.name);
+            BuilderUtil.SetRef(sel, "bestText", stageRefs.best);
+            BuilderUtil.SetRef(sel, "threatText", stageRefs.threat);
+            BuilderUtil.SetRef(sel, "clearanceText", stageRefs.clearText);
+            BuilderUtil.SetRef(sel, "clearanceFill", stageRefs.clearFill);
+            BuilderUtil.SetFloat(sel, "clearanceWidth", StageRefs.BarWidth);
+            BuilderUtil.SetRef(sel, "lockGroup", stageRefs.lockGroup);
+            BuilderUtil.SetRef(sel, "lockText", stageRefs.lockText);
 
             var mc = host.AddComponent<MenuController>();
             BuilderUtil.SetRef(mc, "settingsButton", settings);
             BuilderUtil.SetRef(mc, "closeSettingsButton", back);
             BuilderUtil.SetRef(mc, "settingsPanel", settingsPanel);
-            BuilderUtil.SetRef(mc, "bestText", bestText);
             BuilderUtil.SetRef(mc, "biomassText", biomass);
             BuilderUtil.SetRef(mc, "coresText", cores);
             BuilderUtil.SetRef(mc, "avatarShip", avatarShip);
@@ -87,13 +102,13 @@ namespace GamingApp.EditorTools
         }
 
         // ---------- sections ----------
-        static void BuildBackdrop(RectTransform bd)
+        static (Image a, Image b) BuildBackdrop(RectTransform bd)
         {
             StretchImg(bd, "Gradient", "grad_bg", Color.white);
-            var nebA = Img(bd, "NebulaViolet", "nebula_a", A(Color.white, 0.9f), new Vector2(-200, 350), new Vector2(1500, 1500));
+            var nebA = Img(bd, "NebulaA", "neb_01_a", A(Color.white, 0.9f), new Vector2(-200, 350), new Vector2(1500, 1500));
             nebA.rectTransform.localEulerAngles = new Vector3(0, 0, 20);
             Motion(nebA).spin = 1.2f;
-            var nebB = Img(bd, "NebulaTeal", "nebula_b", A(Color.white, 0.55f), new Vector2(300, -400), new Vector2(1300, 1300));
+            var nebB = Img(bd, "NebulaB", "neb_01_b", A(Color.white, 0.55f), new Vector2(300, -400), new Vector2(1300, 1300));
             nebB.rectTransform.localEulerAngles = new Vector3(0, 0, -30);
             Motion(nebB).spin = -0.8f;
 
@@ -102,20 +117,33 @@ namespace GamingApp.EditorTools
             var sb = Motion(StretchImg(bd, "StarsB", "stars_b", A(Color.white, 0.75f)));
             sb.alphaMin = 0.15f; sb.alphaSpeed = 1.4f; sb.phase = 1.7f;
             StretchImg(bd, "Vignette", "vignette", A(Black, 0.8f));
+            return (nebA, nebB);
         }
 
-        static Button BuildStage(RectTransform stage, float runSeconds, out Text bestText)
+        class StageRefs
         {
-            var hex = Motion(Img(stage, "HexFloor", "hex_field", A(UiTheme.Teal, 0.35f), new Vector2(0, -330), new Vector2(1150, 575)));
+            public const float BarWidth = 740f;
+            public Button prev, next;
+            public Image system, glow;
+            public Text number, name, best, threat, clearText, lockText;
+            public RectTransform clearFill;
+            public GameObject lockGroup;
+        }
+
+        static StageRefs BuildStage(RectTransform stage)
+        {
+            var r = new StageRefs();
+            var show = new Vector2(0, 60);
+            var hex = Motion(Img(stage, "HexFloor", "hex_field", A(UiTheme.Teal, 0.3f), new Vector2(0, -330), new Vector2(1150, 575)));
             hex.alphaMin = 0.55f; hex.alphaSpeed = 0.7f;
-            var glowBig = Motion(Img(stage, "GlowViolet", "glow", A(UiTheme.Violet, 0.55f), new Vector2(0, 60), new Vector2(1000, 1000)));
+            var glowBig = Motion(Img(stage, "GlowStar", "glow", A(Color.white, 0.5f), show, new Vector2(1000, 1000)));
             glowBig.pulseAmplitude = 0.04f; glowBig.pulseSpeed = 0.8f;
-            var glowTeal = Motion(Img(stage, "GlowTeal", "glow", A(UiTheme.Teal, 0.35f), new Vector2(0, 60), new Vector2(560, 560)));
-            glowTeal.alphaMin = 0.6f; glowTeal.alphaSpeed = 1.1f;
-            Motion(Img(stage, "TechRing", "ring_tech", A(UiTheme.Teal, 0.45f), new Vector2(0, 60), new Vector2(760, 760))).spin = 5f;
-            Motion(Img(stage, "OrbitRing", "ring_orbit", new Color(0.75f, 0.6f, 1f, 0.75f), new Vector2(0, 60), new Vector2(680, 680))).spin = -14f;
-            var planet = Motion(Img(stage, "Planet", "planet", Color.white, new Vector2(0, 60), new Vector2(640, 640)));
-            planet.bobAmplitude = 12f; planet.bobSpeed = 0.9f;
+            r.glow = glowBig.GetComponent<Image>();
+            Motion(Img(stage, "TechRing", "ring_tech", A(UiTheme.Teal, 0.35f), show, new Vector2(780, 780))).spin = 4f;
+            Motion(Img(stage, "OrbitRing", "ring_orbit", new Color(0.75f, 0.6f, 1f, 0.6f), show, new Vector2(700, 700))).spin = -10f;
+            var sys = Motion(Img(stage, "System", "system_01", Color.white, show, new Vector2(760, 760)));
+            sys.bobAmplitude = 10f; sys.bobSpeed = 0.8f;
+            r.system = sys.GetComponent<Image>();
 
             var rnd = new System.Random(3);
             for (int i = 0; i < 14; i++)
@@ -130,29 +158,45 @@ namespace GamingApp.EditorTools
                 m.phase = (float)rnd.NextDouble() * 10f;
             }
 
-            Label(stage, "ChapterNumber", "CHAPTER 1", 38, UiTheme.Teal, new Vector2(0, 560), new Vector2(400, 60));
+            // Lock overlay for systems that are not reachable yet.
+            var lockGo = new GameObject("Locked", typeof(RectTransform));
+            var lockRt = (RectTransform)lockGo.transform;
+            lockRt.SetParent(stage, false);
+            lockRt.anchoredPosition = show;
+            lockRt.sizeDelta = Vector2.zero;
+            Img(lockRt, "LockDisc", "disc", A(UiTheme.Background, 0.85f), Vector2.zero, new Vector2(200, 200));
+            Img(lockRt, "LockRing", "ring_thin", A(UiTheme.Danger, 0.8f), Vector2.zero, new Vector2(206, 206));
+            Img(lockRt, "LockIcon", "ico_lock", UiTheme.White, Vector2.zero, new Vector2(100, 100));
+            r.lockText = Label(lockRt, "LockText", "", 32, UiTheme.White, new Vector2(0, -150), new Vector2(900, 50), shadow: true);
+            r.lockGroup = lockGo;
+
+            r.number = Label(stage, "SystemNumber", "SYSTEM 1", 38, UiTheme.Teal, new Vector2(0, 560), new Vector2(400, 60));
             Img(stage, "LineL", "line_glow", UiTheme.Teal, new Vector2(-220, 560), new Vector2(180, 12));
             Img(stage, "LineR", "line_glow", UiTheme.Teal, new Vector2(220, 560), new Vector2(180, 12));
-            Label(stage, "ChapterName", "ORBITAL WRECKAGE", 78, UiTheme.White, new Vector2(0, 485), new Vector2(1040, 110), shadow: true);
+            r.name = Label(stage, "SystemName", "SOL OUTPOST", 78, UiTheme.White, new Vector2(0, 485), new Vector2(1040, 110), shadow: true);
 
-            var left = Img(stage, "PrevChapter", "disc", A(UiTheme.PanelLight, 0.3f), new Vector2(-430, 60), new Vector2(120, 120));
-            Img(left.rectTransform, "Icon", "ico_left", A(UiTheme.SoftText, 0.3f), Vector2.zero, new Vector2(56, 56));
-            var next = CircleButton(stage, "NextChapter", new Vector2(430, 60), 120, "ico_right", UiTheme.SoftText, 56);
-            var badge = Img((RectTransform)next.transform, "LockBadge", "disc", UiTheme.Violet, new Vector2(40, -40), new Vector2(46, 46));
-            Img(badge.rectTransform, "Lock", "ico_lock", UiTheme.White, Vector2.zero, new Vector2(28, 28));
+            r.prev = CircleButton(stage, "PrevSystem", show + new Vector2(-440, 0), 120, "ico_left", UiTheme.SoftText, 56);
+            r.next = CircleButton(stage, "NextSystem", show + new Vector2(440, 0), 120, "ico_right", UiTheme.SoftText, 56);
 
-            var cardPos = new Vector2(0, -400);
-            Img(stage, "CardShadow", "rr_soft", A(Black, 0.5f), cardPos + new Vector2(0, -10), new Vector2(880, 230), sliced: true);
-            var card = Img(stage, "InfoCard", "rr", A(UiTheme.Panel, 0.92f), cardPos, new Vector2(820, 170), sliced: true).rectTransform;
-            Img(card, "Outline", "rr_line", A(UiTheme.Teal, 0.3f), Vector2.zero, new Vector2(820, 170), sliced: true);
-            Img(card, "Divider", null, A(UiTheme.Teal, 0.2f), new Vector2(20, 0), new Vector2(3, 110));
-            Img(card, "Trophy", "ico_trophy", UiTheme.Teal, new Vector2(-330, 0), new Vector2(64, 64));
-            Label(card, "BestLabel", "BEST RUN", 26, UiTheme.SoftText, new Vector2(-160, 28), new Vector2(260, 40), TextAnchor.MiddleLeft);
-            bestText = Label(card, "BestValue", "--:--", 50, UiTheme.White, new Vector2(-160, -22), new Vector2(260, 64), TextAnchor.MiddleLeft);
-            Img(card, "Clock", "ico_clock", SoftViolet, new Vector2(80, 0), new Vector2(58, 58));
-            Label(card, "GoalLabel", "SURVIVE", 26, UiTheme.SoftText, new Vector2(250, 28), new Vector2(260, 40), TextAnchor.MiddleLeft);
-            Label(card, "GoalValue", $"{(int)runSeconds / 60:00}:{(int)runSeconds % 60:00}", 50, UiTheme.White, new Vector2(250, -22), new Vector2(260, 64), TextAnchor.MiddleLeft);
-            return next;
+            var cardPos = new Vector2(0, -420);
+            var cardSize = new Vector2(820, 250);
+            Img(stage, "CardShadow", "rr_soft", A(Black, 0.5f), cardPos + new Vector2(0, -10), cardSize + new Vector2(60, 60), sliced: true);
+            var card = Img(stage, "InfoCard", "rr", A(UiTheme.Panel, 0.92f), cardPos, cardSize, sliced: true).rectTransform;
+            Img(card, "Outline", "rr_line", A(UiTheme.Teal, 0.3f), Vector2.zero, cardSize, sliced: true);
+            Img(card, "Divider", null, A(UiTheme.Teal, 0.2f), new Vector2(20, 45), new Vector2(3, 100));
+            Img(card, "Trophy", "ico_trophy", UiTheme.Teal, new Vector2(-330, 45), new Vector2(64, 64));
+            Label(card, "BestLabel", "BEST RUN", 26, UiTheme.SoftText, new Vector2(-160, 73), new Vector2(260, 40), TextAnchor.MiddleLeft);
+            r.best = Label(card, "BestValue", "--:--", 50, UiTheme.White, new Vector2(-160, 23), new Vector2(260, 64), TextAnchor.MiddleLeft);
+            Img(card, "Threat", "enemy_05", Color.white, new Vector2(80, 45), new Vector2(76, 76));
+            Label(card, "ThreatLabel", "ENEMY POWER", 26, UiTheme.SoftText, new Vector2(250, 73), new Vector2(260, 40), TextAnchor.MiddleLeft);
+            r.threat = Label(card, "ThreatValue", "+0%", 50, new Color(1f, 0.45f, 0.5f), new Vector2(250, 23), new Vector2(260, 64), TextAnchor.MiddleLeft);
+
+            r.clearText = Label(card, "ClearLabel", "THREAT CLEARED 0%", 26, UiTheme.SoftText, new Vector2(0, -52), new Vector2(StageRefs.BarWidth, 40), TextAnchor.MiddleLeft);
+            Img(card, "ClearBack", "pill", UiTheme.BarBackground, new Vector2(0, -90), new Vector2(StageRefs.BarWidth, 24), sliced: true);
+            var fill = Img(card, "ClearFill", "pill", UiTheme.Teal, new Vector2(-StageRefs.BarWidth / 2f, -90), new Vector2(StageRefs.BarWidth, 24), sliced: true);
+            fill.rectTransform.pivot = new Vector2(0f, 0.5f);
+            r.clearFill = fill.rectTransform;
+            return r;
         }
 
         static Image BuildProfile(RectTransform tl, out Text level)

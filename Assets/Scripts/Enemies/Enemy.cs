@@ -11,6 +11,10 @@ namespace GamingApp.Enemies
     {
         [SerializeField] EnemyData data;
         [SerializeField] XpGem xpGemPrefab;
+        [SerializeField] FxBurst deathFx;
+
+        static readonly Color DeathColor = new Color(1f, 0.25f, 0.2f);
+        float damageMultiplier = 1f;
 
         Health health;
         Transform target;
@@ -71,8 +75,9 @@ namespace GamingApp.Enemies
         }
 
         /// <summary>Called by the spawner right after instantiation.</summary>
-        public void Init(EnemyData enemyData, Transform player, float healthMultiplier)
+        public void Init(EnemyData enemyData, Transform player, float healthMultiplier, float damageMult = 1f)
         {
+            damageMultiplier = damageMult;
             data = enemyData;
             target = player;
             health.SetMax(data.maxHealth * healthMultiplier);
@@ -113,7 +118,7 @@ namespace GamingApp.Enemies
             nextShotTime = Time.time + data.shootInterval;
             var go = Instantiate(data.projectilePrefab, transform.position + Vector3.up * 0.5f,
                 Quaternion.LookRotation(dir, Vector3.up));
-            if (go.TryGetComponent(out Projectile p)) p.Init(dir, data.contactDamage, targetsPlayer: true);
+            if (go.TryGetComponent(out Projectile p)) p.Init(dir, data.contactDamage * damageMultiplier, targetsPlayer: true);
         }
 
         void OnTriggerStay(Collider other)
@@ -122,12 +127,15 @@ namespace GamingApp.Enemies
             if (other.TryGetComponent(out PlayerHealth _) && other.TryGetComponent(out Health playerHealth))
             {
                 nextContactTime = Time.time + 0.5f;
-                playerHealth.TakeDamage(data.contactDamage);
+                playerHealth.TakeDamage(data.contactDamage * damageMultiplier);
             }
         }
 
         void OnDied(Health _)
         {
+            float size = TryGetComponent(out SphereCollider col) ? col.radius / 0.4f : 1f;
+            FxBurst.Spawn(deathFx, transform.position, size * 1.8f, DeathColor);
+            if (data != null && data.isMiniBoss) CameraShake.Add(0.8f);
             if (GameManager.Instance != null && data != null) GameManager.Instance.RegisterKill(data.isMiniBoss);
             if (xpGemPrefab != null && data != null)
             {

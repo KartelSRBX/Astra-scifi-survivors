@@ -29,9 +29,12 @@ namespace GamingApp.EditorTools
             var assets = AssetBuilder.BuildAll();
             BuilderUtil.EnsureDir(BuilderUtil.SceneDir);
 
-            BuildWorld();
+            var ground = BuildWorld();
             var player = BuildPlayer(out var weapon);
-            BuildCamera(player.transform);
+            var cam = BuildCamera(player.transform);
+            var applier = new GameObject("SystemApplier").AddComponent<SystemApplier>();
+            BuilderUtil.SetRef(applier, "ground", ground);
+            BuilderUtil.SetRef(applier, "cam", cam);
             BuildManagers(player, weapon, assets, out var upgrades);
             UiBuilder.Build(player.GetComponent<PlayerController>(), player.GetComponent<Health>(),
                 player.GetComponent<PlayerExperience>(), weapon, upgrades);
@@ -50,7 +53,7 @@ namespace GamingApp.EditorTools
         // Entry point for CLI: Unity -batchmode -quit -executeMethod GamingApp.EditorTools.SceneBuilder.BuildFromCommandLine
         public static void BuildFromCommandLine() => BuildTestScene();
 
-        static void BuildWorld()
+        static Renderer BuildWorld()
         {
             var lightGo = new GameObject("Directional Light");
             var light = lightGo.AddComponent<Light>();
@@ -63,6 +66,7 @@ namespace GamingApp.EditorTools
             var groundMat = BuilderUtil.MakeMaterial("Ground", new Color(0.05f, 0.06f, 0.14f));
             BuilderUtil.ApplyGrid(groundMat, 200f);
             ground.GetComponent<Renderer>().sharedMaterial = groundMat;
+            return ground.GetComponent<Renderer>();
         }
 
         static GameObject BuildPlayer(out PlayerWeapon weapon)
@@ -83,7 +87,7 @@ namespace GamingApp.EditorTools
             return go;
         }
 
-        static void BuildCamera(Transform target)
+        static Camera BuildCamera(Transform target)
         {
             var go = new GameObject("Main Camera", typeof(Camera), typeof(AudioListener));
             go.tag = "MainCamera";
@@ -94,6 +98,7 @@ namespace GamingApp.EditorTools
             go.transform.LookAt(target.position);
             var follow = go.AddComponent<TopDownCamera>();
             BuilderUtil.SetRef(follow, "target", target);
+            return cam;
         }
 
         static void BuildManagers(GameObject player, PlayerWeapon weapon, AssetBuilder.Result assets, out UpgradeManager upgrades)

@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 512998a4d17071c4b927b38ea729dbbb, type: 3}
+  m_Name: Weapon_heavy_drones
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Weapons.WeaponDef
+  id: heavy_drones
+  displayName: Heavy Drones
+  description: Two gunship drones with explosive shells.
+  color: {r: 0.45, g: 0.62, b: 1, a: 1}
+  icon: {fileID: 21300000, guid: de5850145282ada4a9e61be11dbceae4, type: 3}
+  mode: 2
+  stats:
+    damage: 16
+    fireInterval: 1.5
+    range: 12
+    projectiles: 1
+    speed: 13
+    turnRate: 200
+    aoe: 0.9
+    pierce: 0
+    drones: 2
+    spread: 10
+  steps:
+  - title: Heavy Shells
+    description: Damage +30%
+    damageMult: 1.3
+    fireRateMult: 1
+    rangeMult: 1
+    aoeMult: 1
+    setAoe: 0
+    addProjectiles: 0
+    addPierce: 0
+    addDrones: 0
+  - title: Twin Guns
+    description: +1 shell per volley
+    damageMult: 1
+    fireRateMult: 1
+    rangeMult: 1
+    aoeMult: 1
+    setAoe: 0
+    addProjectiles: 1
+    addPierce: 0
+    addDrones: 0
+  - title: Autoloaders
+    description: Fire rate +30%
+    damageMult: 1
+    fireRateMult: 1.3
+    rangeMult: 1
+    aoeMult: 1
+    setAoe: 0
+    addProjectiles: 0
+    addPierce: 0
+    addDrones: 0
+  - title: Third Gunship
+    description: +1 heavy drone
+    damageMult: 1
+    fireRateMult: 1
+    rangeMult: 1
+    aoeMult: 1
+    setAoe: 0
+    addProjectiles: 0
+    addPierce: 0
+    addDrones: 1
+  - title: Siege Mode
+    description: Blast +60%, damage +30%
+    damageMult: 1.3
+    fireRateMult: 1
+    rangeMult: 1
+    aoeMult: 1.6
+    setAoe: 0
+    addProjectiles: 0
+    addPierce: 0
+    addDrones: 0
+  projectilePrefab: {fileID: 4340099280575313181, guid: a01765f992a7bbd4da06592a4e0bca00, type: 3}
+  dronePrefab: {fileID: 6072190220473788856, guid: c8a7e98885497a246ba108555d2d5395, type: 3}
+  explosionPrefab: {fileID: 2054408277586878180, guid: 17787423ffcfee946a9feaf125815d4e, type: 3}
+  hitPrefab: {fileID: 7233051669274611374, guid: 1c5b296d07eb6c44d9e32799943521c3, type: 3}
+  beamMaterial: {fileID: 0}

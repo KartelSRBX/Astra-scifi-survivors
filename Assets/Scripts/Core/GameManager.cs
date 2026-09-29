@@ -49,7 +49,9 @@ namespace GamingApp.Core
             if (next == RunState.Won || next == RunState.Lost)
             {
                 SaveBestTime();
-                RunRewards.Grant(Kills, BossKills, Elapsed, next == RunState.Won);
+                bool won = next == RunState.Won;
+                Profile.RecordSystem(Weapons.RunSetup.SystemIndex, won ? 1f : Progress, Elapsed);
+                RunRewards.Grant(Kills, BossKills, Elapsed, won);
             }
             StateChanged?.Invoke(next);
         }

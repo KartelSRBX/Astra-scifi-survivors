@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GamingApp.Core;
+using GamingApp.UI;
+using GamingApp.Weapons;
 
 namespace GamingApp.Enemies
 {
@@ -25,6 +27,13 @@ namespace GamingApp.Enemies
         float spawnBudget;
         readonly HashSet<EnemyData> spawnedBosses = new();
         int alive;
+        float difficulty = 1f;
+
+        void Start()
+        {
+            var sys = RunSetup.System;
+            if (sys != null) difficulty = sys.Difficulty;
+        }
 
         void Update()
         {
@@ -76,7 +85,12 @@ namespace GamingApp.Enemies
 
             var go = Instantiate(data.prefab, pos, Quaternion.identity);
             if (go.TryGetComponent(out Enemy enemy))
-                enemy.Init(data, player, Mathf.Lerp(1f, endHealthMultiplier, progress));
+                enemy.Init(data, player, Mathf.Lerp(1f, endHealthMultiplier, progress) * difficulty, difficulty);
+            if (data.isMiniBoss)
+            {
+                Banner.Show("WARNING", $"{data.displayName.ToUpper()} INBOUND", new Color(1f, 0.3f, 0.3f));
+                CameraShake.Add(0.5f);
+            }
 
             alive++;
             go.AddComponent<AliveCounter>().Init(() => alive--);
