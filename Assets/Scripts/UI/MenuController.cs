@@ -36,13 +36,13 @@ namespace GamingApp.UI
                 string title = navTitles[i];
                 navButtons[i].onClick.AddListener(() =>
                 {
-                    placeholderTitle.text = title + "\nComing soon"; // TODO: localize
+                    placeholderTitle.text = title;
                     placeholderPanel.SetActive(true);
                 });
             }
 
             float best = GameManager.BestTime;
-            bestText.text = best > 0f ? $"Best: {(int)best / 60:00}:{(int)best % 60:00}" : "";
+            bestText.text = best > 0f ? $"{(int)best / 60:00}:{(int)best % 60:00}" : "--:--";
             biomassText.text = Wallet.Biomass.ToString();
             coresText.text = Wallet.Cores.ToString();
         }

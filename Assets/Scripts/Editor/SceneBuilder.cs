@@ -38,7 +38,7 @@ namespace GamingApp.EditorTools
 
             EditorSceneManager.SaveScene(scene, ScenePath);
 
-            MenuBuilder.Build(MenuPath);
+            MenuBuilder.Build(MenuPath, TestRunSeconds);
             SetBuildScenes(MenuPath, ScenePath);
             AndroidSettings.Apply();
             AssetDatabase.SaveAssets();

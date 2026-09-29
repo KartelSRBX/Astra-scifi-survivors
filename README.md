@@ -46,3 +46,5 @@ Localization (EN/RU), ads + consent, privacy policy, Data Safety, art, sound, se
 Menu scene (Play / Settings / best time), in-game HUD, pause with volume, level-up cards,
 result screen with menu button, floating on-screen joystick. Palette lives in `Assets/Scripts/UI/UiTheme.cs`.
 Rebuild everything with Tools > GamingApp > Build Test Scene, then Play from the Menu scene.
+All menu art is procedural (`Assets/Scripts/Editor/UiArt.cs`, engine-independent) and written to
+`Assets/Art/UI/Generated` by `UiSprites` on each build.

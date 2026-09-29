@@ -97,6 +97,7 @@ namespace GamingApp.EditorTools
             BuilderUtil.SetRef(pp, "pauseButton", pauseBtn);
             BuilderUtil.SetRef(pp, "resumeButton", resume);
             BuilderUtil.SetRef(pp, "menuButton", menu);
+            AddPopIn(panel);
             panel.SetActive(false);
         }
 
@@ -117,7 +118,7 @@ namespace GamingApp.EditorTools
                     new Vector2(0, 260 - i * 330), new Vector2(880, 290), UiTheme.Panel, null, 0);
                 var accent = MakeImage((RectTransform)btn.transform, "Accent", null, i == 1 ? UiTheme.Violet : (i == 2 ? UiTheme.Blue : UiTheme.Teal), new Vector2(14, 0));
                 accent.anchorMin = new Vector2(0f, 0f); accent.anchorMax = new Vector2(0f, 1f);
-                accent.pivot = new Vector2(0f, 0.5f); accent.anchoredPosition = Vector2.zero; accent.sizeDelta = new Vector2(14, 0);
+                accent.pivot = new Vector2(0f, 0.5f); accent.anchoredPosition = new Vector2(10, 0); accent.sizeDelta = new Vector2(10, -80);
                 var name = MakeText((RectTransform)btn.transform, "Name", "Upgrade", 54, TextAnchor.MiddleCenter, new Vector2(0.5f, 1f), new Vector2(0, -70), new Vector2(820, 90));
                 name.color = UiTheme.Teal; name.fontStyle = FontStyle.Bold;
                 var desc = MakeText((RectTransform)btn.transform, "Desc", "Description", 38, TextAnchor.MiddleCenter, new Vector2(0.5f, 0f), new Vector2(0, 90), new Vector2(820, 120));
@@ -133,6 +134,7 @@ namespace GamingApp.EditorTools
             BuilderUtil.SetRefArray(lp, "cardButtons", buttons);
             BuilderUtil.SetRefArray(lp, "cardTitles", titles);
             BuilderUtil.SetRefArray(lp, "cardDescriptions", descs);
+            AddPopIn(panel);
             panel.SetActive(false);
         }
 
@@ -153,7 +155,14 @@ namespace GamingApp.EditorTools
             BuilderUtil.SetRef(rp, "detailsText", details);
             BuilderUtil.SetRef(rp, "restartButton", restart);
             BuilderUtil.SetRef(rp, "menuButton", menu);
+            AddPopIn(panel);
             panel.SetActive(false);
+        }
+
+        static void AddPopIn(GameObject panel)
+        {
+            panel.AddComponent<CanvasGroup>();
+            panel.AddComponent<PopIn>();
         }
 
         // ---- Shared widgets ----
@@ -222,7 +231,11 @@ namespace GamingApp.EditorTools
             rt.anchorMin = rt.anchorMax = rt.pivot = anchor;
             rt.anchoredPosition = pos;
             rt.sizeDelta = dims;
-            go.GetComponent<Image>().color = color;
+            var img = go.GetComponent<Image>();
+            img.color = color;
+            img.sprite = UiSprites.Get("rr");
+            img.type = Image.Type.Sliced;
+            go.AddComponent<ButtonPress>();
             if (!string.IsNullOrEmpty(label))
             {
                 var t = MakeText(rt, "Label", label, labelSize, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), Vector2.zero, dims - new Vector2(20, 10));
