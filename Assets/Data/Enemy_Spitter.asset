@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 586998ac18d30d34c8c98969c11015c2, type: 3}
   m_Name: Enemy_Spitter
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Enemies.EnemyData
   displayName: Spitter
   prefab: {fileID: 8964510079574884523, guid: dc1e6d1ec4506b94e987beb34180d4f5, type: 3}
   behaviour: 1

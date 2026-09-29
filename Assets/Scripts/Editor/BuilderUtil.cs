@@ -35,6 +35,32 @@ namespace GamingApp.EditorTools
             return mat;
         }
 
+        /// <summary>Gives a material a tiled grid texture so movement is visible on a flat ground.</summary>
+        public static void ApplyGrid(Material mat, float tiles)
+        {
+            string path = $"{MaterialDir}/GroundGrid.png";
+            if (!File.Exists(path))
+            {
+                const int n = 64;
+                var tex = new Texture2D(n, n, TextureFormat.RGBA32, false);
+                var bg = new Color(0.12f, 0.14f, 0.18f);
+                var line = new Color(0.25f, 0.3f, 0.4f);
+                for (int y = 0; y < n; y++)
+                    for (int x = 0; x < n; x++)
+                        tex.SetPixel(x, y, (x < 2 || y < 2) ? line : bg);
+                File.WriteAllBytes(path, tex.EncodeToPNG());
+                Object.DestroyImmediate(tex);
+                AssetDatabase.ImportAsset(path);
+            }
+            var grid = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+            mat.mainTexture = grid;
+            mat.mainTextureScale = new Vector2(tiles, tiles);
+            if (mat.HasProperty("_Glossiness")) mat.SetFloat("_Glossiness", 0f);
+            if (mat.HasProperty("_Metallic")) mat.SetFloat("_Metallic", 0f);
+            if (mat.HasProperty("_BaseMap")) mat.SetTexture("_BaseMap", grid);
+            EditorUtility.SetDirty(mat);
+        }
+
         /// <summary>Assigns a private [SerializeField] field by name.</summary>
         public static void SetRef(Object target, string field, Object value)
         {

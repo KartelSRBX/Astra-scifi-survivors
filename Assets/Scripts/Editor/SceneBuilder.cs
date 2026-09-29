@@ -21,10 +21,11 @@ namespace GamingApp.EditorTools
         [MenuItem("Tools/GamingApp/Build Test Scene")]
         public static void BuildTestScene()
         {
+            // The scene must exist before assets are built: NewScene unloads unreferenced asset objects,
+            // which would turn every reference in `assets` into null.
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             var assets = AssetBuilder.BuildAll();
             BuilderUtil.EnsureDir(BuilderUtil.SceneDir);
-
-            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             BuildWorld();
             var player = BuildPlayer(assets.PlayerProjectile, out var weapon);
@@ -53,7 +54,9 @@ namespace GamingApp.EditorTools
             var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "Ground";
             ground.transform.localScale = new Vector3(40f, 1f, 40f); // 400x400 units
-            ground.GetComponent<Renderer>().sharedMaterial = BuilderUtil.MakeMaterial("Ground", new Color(0.12f, 0.14f, 0.18f));
+            var groundMat = BuilderUtil.MakeMaterial("Ground", new Color(0.12f, 0.14f, 0.18f));
+            BuilderUtil.ApplyGrid(groundMat, 200f);
+            ground.GetComponent<Renderer>().sharedMaterial = groundMat;
         }
 
         static GameObject BuildPlayer(Projectile projectile, out AutoWeapon weapon)

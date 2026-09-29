@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 586998ac18d30d34c8c98969c11015c2, type: 3}
   m_Name: Enemy_MiniBoss_B
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Enemies.EnemyData
   displayName: MiniBoss_B
   prefab: {fileID: 5766933770823039591, guid: 42ecd696a8e6fcc4dae0bcefd1555f05, type: 3}
   behaviour: 0

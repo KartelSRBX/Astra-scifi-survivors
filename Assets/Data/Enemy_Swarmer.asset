@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 586998ac18d30d34c8c98969c11015c2, type: 3}
   m_Name: Enemy_Swarmer
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Enemies.EnemyData
   displayName: Swarmer
   prefab: {fileID: 8516464911032292925, guid: a5a72bef03ed78d4c9513149b535aa09, type: 3}
   behaviour: 0

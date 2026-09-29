@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bce02a418680bc489b33c74f432527c, type: 3}
   m_Name: Upgrade_FireRate
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Weapons.UpgradeData
   displayName: Fire rate +20%
   description: Shoot more often.
   isWeaponUpgrade: 1
