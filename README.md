@@ -41,3 +41,8 @@ Compiles and the test scene builds in Unity 6000.6.3f1 (the project's current ed
 
 ## Not done yet
 Localization (EN/RU), ads + consent, privacy policy, Data Safety, art, sound, second map, real balance.
+
+## UI (dark theme)
+Menu scene (Play / Settings / best time), in-game HUD, pause with volume, level-up cards,
+result screen with menu button, floating on-screen joystick. Palette lives in `Assets/Scripts/UI/UiTheme.cs`.
+Rebuild everything with Tools > GamingApp > Build Test Scene, then Play from the Menu scene.

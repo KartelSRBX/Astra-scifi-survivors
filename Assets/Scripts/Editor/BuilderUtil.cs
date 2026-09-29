@@ -22,7 +22,13 @@ namespace GamingApp.EditorTools
             EnsureDir(MaterialDir);
             string path = $"{MaterialDir}/{name}.mat";
             var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
-            if (existing != null) return existing;
+            if (existing != null)
+            {
+                existing.color = color;
+                if (existing.HasProperty("_BaseColor")) existing.SetColor("_BaseColor", color);
+                EditorUtility.SetDirty(existing);
+                return existing;
+            }
 
             // Built-in pipeline by default; fall back to URP if the project uses it.
             bool srp = UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline != null;
@@ -38,13 +44,13 @@ namespace GamingApp.EditorTools
         /// <summary>Gives a material a tiled grid texture so movement is visible on a flat ground.</summary>
         public static void ApplyGrid(Material mat, float tiles)
         {
-            string path = $"{MaterialDir}/GroundGrid.png";
+            string path = $"{MaterialDir}/GroundGridDark.png";
             if (!File.Exists(path))
             {
                 const int n = 64;
                 var tex = new Texture2D(n, n, TextureFormat.RGBA32, false);
-                var bg = new Color(0.12f, 0.14f, 0.18f);
-                var line = new Color(0.25f, 0.3f, 0.4f);
+                var bg = new Color(0.05f, 0.06f, 0.14f);
+                var line = new Color(0.16f, 0.14f, 0.36f);
                 for (int y = 0; y < n; y++)
                     for (int x = 0; x < n; x++)
                         tex.SetPixel(x, y, (x < 2 || y < 2) ? line : bg);

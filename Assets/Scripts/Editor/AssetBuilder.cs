@@ -23,14 +23,14 @@ namespace GamingApp.EditorTools
 
             var gem = BuildXpGem();
             r.PlayerProjectile = BuildProjectile("Projectile_Player", new Color(0.3f, 0.9f, 1f), 0.3f);
-            var enemyProjectile = BuildProjectile("Projectile_Enemy", new Color(0.7f, 1f, 0.2f), 0.4f);
+            var enemyProjectile = BuildProjectile("Projectile_Enemy", new Color(0.7f, 0.35f, 1f), 0.4f);
 
             //                          name       scale  color                       hp   speed dmg xp  weight unlock behaviour                          boss
-            r.Enemies.Add(BuildEnemy("Swarmer", 0.7f, new Color(0.5f, 0.9f, 0.3f), 8f, 3.6f, 4f, 1, 5f, 0f, EnemyBehaviour.Chase, false, gem, null));
-            r.Enemies.Add(BuildEnemy("Tank", 1.6f, new Color(0.2f, 0.5f, 0.2f), 60f, 1.6f, 12f, 4, 1.5f, 0.1f, EnemyBehaviour.Chase, false, gem, null));
-            r.Enemies.Add(BuildEnemy("Spitter", 1.0f, new Color(0.8f, 0.9f, 0.1f), 14f, 2.4f, 6f, 2, 2f, 0.25f, EnemyBehaviour.KeepDistanceAndShoot, false, gem, enemyProjectile));
-            r.Enemies.Add(BuildEnemy("MiniBoss_A", 3.0f, new Color(0.7f, 0.1f, 0.5f), 600f, 2.0f, 20f, 30, 1f, 0.5f, EnemyBehaviour.Chase, true, gem, null));
-            r.Enemies.Add(BuildEnemy("MiniBoss_B", 3.6f, new Color(0.9f, 0.1f, 0.2f), 1800f, 2.2f, 30f, 60, 1f, 0.9f, EnemyBehaviour.Chase, true, gem, null));
+            r.Enemies.Add(BuildEnemy("Swarmer", 0.7f, new Color(0.65f, 0.35f, 1f), 8f, 3.6f, 4f, 1, 5f, 0f, EnemyBehaviour.Chase, false, gem, null));
+            r.Enemies.Add(BuildEnemy("Tank", 1.6f, new Color(0.4f, 0.15f, 0.7f), 60f, 1.6f, 12f, 4, 1.5f, 0.1f, EnemyBehaviour.Chase, false, gem, null));
+            r.Enemies.Add(BuildEnemy("Spitter", 1.0f, new Color(0.9f, 0.3f, 0.85f), 14f, 2.4f, 6f, 2, 2f, 0.25f, EnemyBehaviour.KeepDistanceAndShoot, false, gem, enemyProjectile));
+            r.Enemies.Add(BuildEnemy("MiniBoss_A", 3.0f, new Color(0.85f, 0.15f, 0.6f), 600f, 2.0f, 20f, 30, 1f, 0.5f, EnemyBehaviour.Chase, true, gem, null));
+            r.Enemies.Add(BuildEnemy("MiniBoss_B", 3.6f, new Color(1f, 0.25f, 0.5f), 1800f, 2.2f, 30f, 60, 1f, 0.9f, EnemyBehaviour.Chase, true, gem, null));
 
             r.Upgrades.Add(BuildUpgrade("Damage", "Damage +25%", "Your weapon hits harder.", true, UpgradeStat.WeaponDamage, 0.25f, 6));
             r.Upgrades.Add(BuildUpgrade("FireRate", "Fire rate +20%", "Shoot more often.", true, UpgradeStat.WeaponFireRate, 0.2f, 6));

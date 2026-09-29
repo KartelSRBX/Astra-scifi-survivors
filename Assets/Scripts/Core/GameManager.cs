@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GamingApp.Core
 {
-    public enum RunState { Playing, LevelUp, Won, Lost }
+    public enum RunState { Playing, LevelUp, Paused, Won, Lost }
 
     /// <summary>Owns the run timer and the high-level run state.</summary>
     public class GameManager : MonoBehaviour
@@ -47,6 +47,9 @@ namespace GamingApp.Core
         }
 
         public void PlayerDied() => SetState(RunState.Lost);
+
+        public void Pause() { if (State == RunState.Playing) SetState(RunState.Paused); }
+        public void Resume() { if (State == RunState.Paused) SetState(RunState.Playing); }
 
         void SaveBestTime()
         {

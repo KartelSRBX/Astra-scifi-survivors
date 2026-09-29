@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace GamingApp.Player
 {
@@ -16,6 +17,12 @@ namespace GamingApp.Player
         CharacterController controller;
         Vector2 dragOrigin;
         bool dragging;
+        int pointerId;
+
+        public bool IsDragging { get; private set; }
+        public float JoystickRadiusPixels => joystickRadiusPixels;
+        public Vector2 DragOriginScreen => dragOrigin;
+        public Vector2 DragCurrentScreen { get; private set; }
 
         public Vector3 MoveDirection { get; private set; }
         public float SpeedMultiplier { get; set; } = 1f;
@@ -37,11 +44,13 @@ namespace GamingApp.Player
         {
             Vector2 pos;
             bool down, held;
+            pointerId = -1;
 
             if (Input.touchCount > 0)
             {
                 Touch t = Input.GetTouch(0);
                 pos = t.position;
+                pointerId = t.fingerId;
                 down = t.phase == TouchPhase.Began;
                 held = t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled;
             }
@@ -52,12 +61,18 @@ namespace GamingApp.Player
                 held = Input.GetMouseButton(0);
             }
 
-            if (down) { dragOrigin = pos; dragging = true; }
-            if (!held) { dragging = false; return Vector2.zero; }
-            if (!dragging) return Vector2.zero;
+            if (down)
+            {
+                bool overUi = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(pointerId);
+                if (!overUi) { dragOrigin = pos; dragging = true; }
+            }
+            if (!held) { dragging = false; IsDragging = false; return Vector2.zero; }
+            if (!dragging) { IsDragging = false; return Vector2.zero; }
 
-            Vector2 delta = pos - dragOrigin;
-            return Vector2.ClampMagnitude(delta / joystickRadiusPixels, 1f);
+            Vector2 delta = Vector2.ClampMagnitude(pos - dragOrigin, joystickRadiusPixels);
+            IsDragging = true;
+            DragCurrentScreen = dragOrigin + delta;
+            return delta / joystickRadiusPixels;
         }
     }
 }

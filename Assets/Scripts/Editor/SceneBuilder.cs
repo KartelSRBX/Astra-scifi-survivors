@@ -5,6 +5,7 @@ using UnityEngine;
 using GamingApp.Core;
 using GamingApp.Enemies;
 using GamingApp.Player;
+using GamingApp.UI;
 using GamingApp.Weapons;
 
 namespace GamingApp.EditorTools
@@ -16,6 +17,7 @@ namespace GamingApp.EditorTools
     public static class SceneBuilder
     {
         const string ScenePath = BuilderUtil.SceneDir + "/Main.unity";
+        const string MenuPath = BuilderUtil.SceneDir + "/Menu.unity";
         const float TestRunSeconds = 300f; // 5 min for quick playtests; roadmap target is 10-15 min
 
         [MenuItem("Tools/GamingApp/Build Test Scene")]
@@ -31,14 +33,18 @@ namespace GamingApp.EditorTools
             var player = BuildPlayer(assets.PlayerProjectile, out var weapon);
             BuildCamera(player.transform);
             BuildManagers(player, weapon, assets, out var upgrades);
-            UiBuilder.Build(player.GetComponent<Health>(), player.GetComponent<PlayerExperience>(), upgrades);
+            UiBuilder.Build(player.GetComponent<PlayerController>(), player.GetComponent<Health>(),
+                player.GetComponent<PlayerExperience>(), upgrades);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
-            AddToBuildSettings(ScenePath);
+
+            MenuBuilder.Build(MenuPath);
+            SetBuildScenes(MenuPath, ScenePath);
             AndroidSettings.Apply();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("[GamingApp] Test scene built: " + ScenePath + ". Press Play. Drag with mouse/finger to move.");
+            if (!Application.isBatchMode) EditorSceneManager.OpenScene(MenuPath);
+            Debug.Log("[GamingApp] Scenes built: Menu + Main. Open Menu and press Play.");
         }
 
         // Entry point for CLI: Unity -batchmode -quit -executeMethod GamingApp.EditorTools.SceneBuilder.BuildFromCommandLine
@@ -54,7 +60,7 @@ namespace GamingApp.EditorTools
             var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "Ground";
             ground.transform.localScale = new Vector3(40f, 1f, 40f); // 400x400 units
-            var groundMat = BuilderUtil.MakeMaterial("Ground", new Color(0.12f, 0.14f, 0.18f));
+            var groundMat = BuilderUtil.MakeMaterial("Ground", new Color(0.05f, 0.06f, 0.14f));
             BuilderUtil.ApplyGrid(groundMat, 200f);
             ground.GetComponent<Renderer>().sharedMaterial = groundMat;
         }
@@ -64,7 +70,7 @@ namespace GamingApp.EditorTools
             var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             go.name = "Player";
             go.transform.position = new Vector3(0f, 1f, 0f);
-            go.GetComponent<Renderer>().sharedMaterial = BuilderUtil.MakeMaterial("Player", new Color(0.3f, 0.7f, 1f));
+            go.GetComponent<Renderer>().sharedMaterial = BuilderUtil.MakeMaterial("Player", new Color(0.13f, 0.83f, 0.77f));
             Object.DestroyImmediate(go.GetComponent<Collider>());
 
             var cc = go.AddComponent<CharacterController>();
@@ -85,7 +91,7 @@ namespace GamingApp.EditorTools
             go.tag = "MainCamera";
             var cam = go.GetComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.03f, 0.03f, 0.06f);
+            cam.backgroundColor = UiTheme.Background;
             go.transform.position = target.position + new Vector3(0f, 18f, -6f);
             go.transform.LookAt(target.position);
             var follow = go.AddComponent<TopDownCamera>();
@@ -109,11 +115,10 @@ namespace GamingApp.EditorTools
             BuilderUtil.SetRef(upgrades, "experience", player.GetComponent<PlayerExperience>());
         }
 
-        static void AddToBuildSettings(string path)
+        static void SetBuildScenes(params string[] paths)
         {
-            var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
-            if (!scenes.Exists(s => s.path == path))
-                scenes.Insert(0, new EditorBuildSettingsScene(path, true));
+            var scenes = new List<EditorBuildSettingsScene>();
+            foreach (var p in paths) scenes.Add(new EditorBuildSettingsScene(p, true));
             EditorBuildSettings.scenes = scenes.ToArray();
         }
     }
