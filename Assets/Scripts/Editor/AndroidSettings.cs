@@ -27,5 +27,31 @@ namespace GamingApp.EditorTools
                 Debug.LogWarning("[GamingApp] Could not apply all Android settings (set them manually in Player Settings): " + e.Message);
             }
         }
+
+        /// <summary>Builds a test APK (not an .aab) and installs + launches it on the USB-connected phone.</summary>
+        [MenuItem("Tools/GamingApp/Build and Run on Phone (APK)")]
+        public static void BuildAndRunApk()
+        {
+            if (!BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
+            {
+                EditorUtility.DisplayDialog("Android module missing",
+                    "Install 'Android Build Support' (with OpenJDK and Android SDK & NDK Tools) for this Unity version in Unity Hub > Installs.", "OK");
+                return;
+            }
+            Apply();
+            bool wasBundle = EditorUserBuildSettings.buildAppBundle;
+            EditorUserBuildSettings.buildAppBundle = false;
+            var options = new BuildPlayerOptions
+            {
+                scenes = new[] { "Assets/Scenes/Menu.unity", "Assets/Scenes/Main.unity" },
+                locationPathName = "Builds/SciFiSurvivors-test.apk",
+                target = BuildTarget.Android,
+                targetGroup = BuildTargetGroup.Android,
+                options = BuildOptions.AutoRunPlayer | BuildOptions.Development,
+            };
+            var report = BuildPipeline.BuildPlayer(options);
+            EditorUserBuildSettings.buildAppBundle = wasBundle;
+            Debug.Log($"[GamingApp] APK build: {report.summary.result}, {report.summary.totalSize / (1024 * 1024)} MB -> {options.locationPathName}");
+        }
     }
 }

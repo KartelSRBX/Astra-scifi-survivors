@@ -11,3 +11,5 @@
 *.sln
 *.apk
 *.aab
+# Local phone test builds
+/[Bb]uilds/
