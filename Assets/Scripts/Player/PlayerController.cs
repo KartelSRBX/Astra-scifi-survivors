@@ -10,7 +10,7 @@ namespace GamingApp.Player
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] float moveSpeed = 5f;
+        [SerializeField] float moveSpeed = 5.5f;
         [SerializeField] float joystickRadiusPixels = 120f;
 
         CharacterController controller;
