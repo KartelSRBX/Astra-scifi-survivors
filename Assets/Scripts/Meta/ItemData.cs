@@ -6,7 +6,7 @@ namespace GamingApp.Meta
     public enum ItemSlot { Weapon, Hull, Engine, Module }
     public enum Rarity { Common, Rare, Epic, Legendary }
 
-    /// <summary>Equippable ship part. Weapons define the base gun; the rest add percentage bonuses.</summary>
+    /// <summary>Equippable ship part. Every slot adds bonuses; the gun itself is chosen before the run.</summary>
     [CreateAssetMenu(menuName = "GamingApp/Item", fileName = "Item_")]
     public class ItemData : ScriptableObject
     {
@@ -16,12 +16,6 @@ namespace GamingApp.Meta
         public Rarity rarity;
         public Sprite icon;
 
-        [Header("Weapon (slot = Weapon)")]
-        public float baseDamage = 5f;
-        public float fireInterval = 0.8f;
-        public float range = 10f;
-        public int projectiles = 1;
-
         [Header("Bonuses (0.1 = +10%)")]
         public float healthPct;
         public float speedPct;
@@ -29,20 +23,17 @@ namespace GamingApp.Meta
         public float fireRatePct;
         public float rangePct;
         public float pickupBonus;
+        public int extraProjectiles;
 
         public string Describe()
         {
             var sb = new StringBuilder();
-            if (slot == ItemSlot.Weapon)
-            {
-                sb.AppendLine($"Damage {baseDamage:0.#} x{projectiles}");
-                sb.AppendLine($"Rate {1f / fireInterval:0.0}/s   Range {range:0}");
-            }
             Pct(sb, "Hull", healthPct);
             Pct(sb, "Speed", speedPct);
             Pct(sb, "Damage", damagePct);
             Pct(sb, "Fire rate", fireRatePct);
             Pct(sb, "Range", rangePct);
+            if (extraProjectiles != 0) sb.AppendLine($"+{extraProjectiles} projectile");
             if (pickupBonus != 0f) sb.AppendLine($"Pickup radius +{pickupBonus:0.#}");
             return sb.ToString().TrimEnd();
         }

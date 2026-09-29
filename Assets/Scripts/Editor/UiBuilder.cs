@@ -34,18 +34,18 @@ namespace GamingApp.EditorTools
             return (RectTransform)canvasGo.transform;
         }
 
-        public static void Build(PlayerController player, Health playerHealth, PlayerExperience xp, UpgradeManager upgrades)
+        public static void Build(PlayerController player, Health playerHealth, PlayerExperience xp, PlayerWeapon weapon, UpgradeManager upgrades)
         {
             var rt = CreateCanvas(out var canvasGo);
             BuildJoystick(rt, canvasGo, player);
-            BuildHud(rt, canvasGo, playerHealth, xp);
+            BuildHud(rt, canvasGo, playerHealth, xp, weapon);
             BuildPause(rt, canvasGo);
             BuildLevelUp(rt, canvasGo, upgrades);
             BuildResult(rt, canvasGo);
         }
 
         // ---- HUD ----
-        static void BuildHud(RectTransform parent, GameObject host, Health hp, PlayerExperience xp)
+        static void BuildHud(RectTransform parent, GameObject host, Health hp, PlayerExperience xp, PlayerWeapon weapon)
         {
             var hud = host.AddComponent<Hud>();
             var timer = MakeText(parent, "Timer", "10:00", 72, TextAnchor.MiddleCenter, new Vector2(0.5f, 1f), new Vector2(0, -80), new Vector2(400, 100));
@@ -62,6 +62,10 @@ namespace GamingApp.EditorTools
             BuilderUtil.SetRef(hud, "xpBar", xpBar);
             BuilderUtil.SetRef(hud, "playerHealth", hp);
             BuilderUtil.SetRef(hud, "experience", xp);
+            var weaponText = MakeText(parent, "Weapon", "", 32, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(40, -195), new Vector2(700, 50));
+            weaponText.fontStyle = FontStyle.Bold;
+            BuilderUtil.SetRef(hud, "weapon", weapon);
+            BuilderUtil.SetRef(hud, "weaponText", weaponText);
         }
 
         // ---- Joystick ----

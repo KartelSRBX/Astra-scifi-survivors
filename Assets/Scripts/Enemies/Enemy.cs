@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using GamingApp.Core;
 using GamingApp.Player;
@@ -20,6 +21,45 @@ namespace GamingApp.Enemies
         float punch;
 
         public EnemyData Data => data;
+        public bool Alive => health != null && !health.IsDead;
+        public Health Health => health;
+
+        /// <summary>Live enemies, for targeting without scene searches.</summary>
+        public static readonly List<Enemy> All = new();
+
+        void OnEnable() => All.Add(this);
+        void OnDisable() => All.Remove(this);
+
+        public static Enemy Nearest(Vector3 pos, float range, Enemy exclude = null)
+        {
+            Enemy best = null;
+            float bestSqr = range * range;
+            foreach (var e in All)
+            {
+                if (e == exclude || !e.Alive) continue;
+                Vector3 d = e.transform.position - pos;
+                d.y = 0f;
+                float sq = d.sqrMagnitude;
+                if (sq < bestSqr) { bestSqr = sq; best = e; }
+            }
+            return best;
+        }
+
+        /// <summary>Fills result with up to count nearest live enemies in range, closest first.</summary>
+        public static void NearestN(Vector3 pos, float range, int count, List<Enemy> result)
+        {
+            result.Clear();
+            float r2 = range * range;
+            foreach (var e in All)
+            {
+                if (!e.Alive) continue;
+                Vector3 d = e.transform.position - pos;
+                d.y = 0f;
+                if (d.sqrMagnitude <= r2) result.Add(e);
+            }
+            result.Sort((x, y) => (x.transform.position - pos).sqrMagnitude.CompareTo((y.transform.position - pos).sqrMagnitude));
+            if (result.Count > count) result.RemoveRange(count, result.Count - count);
+        }
 
         void Awake()
         {

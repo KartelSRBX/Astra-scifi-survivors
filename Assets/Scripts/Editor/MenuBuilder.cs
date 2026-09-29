@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,13 +56,13 @@ namespace GamingApp.EditorTools
 
             BuildHangar(root, host, (Button)navButtons[0]);
             BuildInventory(root, host, (Button)navButtons[1]);
+            BuildWeaponSelect(root, host, play);
             navButtons.RemoveRange(0, 2);
             navTitles.RemoveRange(0, 2);
             navButtons.Add(nextChapter);
             navTitles.Add("CHAPTER 2");
 
             var mc = host.AddComponent<MenuController>();
-            BuilderUtil.SetRef(mc, "playButton", play);
             BuilderUtil.SetRef(mc, "settingsButton", settings);
             BuilderUtil.SetRef(mc, "closeSettingsButton", back);
             BuilderUtil.SetRef(mc, "settingsPanel", settingsPanel);

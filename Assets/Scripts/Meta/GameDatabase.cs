@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using GamingApp.Weapons;
 
 namespace GamingApp.Meta
 {
@@ -8,6 +9,7 @@ namespace GamingApp.Meta
     {
         public List<ShipData> ships = new();
         public List<ItemData> items = new();
+        public List<WeaponDef> weapons = new();
 
         static GameDatabase instance;
         public static GameDatabase Get()
@@ -19,5 +21,6 @@ namespace GamingApp.Meta
         public ShipData Ship(string id) => ships.Find(s => s.id == id);
         public int ShipIndex(string id) => ships.FindIndex(s => s.id == id);
         public ItemData Item(string id) => items.Find(i => i.id == id);
+        public WeaponDef Weapon(string id) => weapons.Find(w => w.id == id);
     }
 }

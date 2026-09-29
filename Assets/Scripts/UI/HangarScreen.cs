@@ -68,7 +68,7 @@ namespace GamingApp.UI
             nameText.text = s.displayName.ToUpper();
             classText.text = s.shipClass;
             counterText.text = $"{index + 1} / {db.ships.Count}";
-            statsText.text = $"{l.maxHealth:0}\n{l.moveSpeed:0.0}\n{l.damage:0.0}\n{1f / l.fireInterval:0.0}/s";
+            statsText.text = $"{l.maxHealth:0}\n{l.moveSpeed:0.0}\nx{l.damageMult:0.00}\nx{l.fireRateMult:0.00}";
             levelText.text = owned ? $"LEVEL {level} / {ShipData.MaxLevel}" : "NOT OWNED";
 
             if (selected) { actionLabel.text = "SELECTED"; actionButton.interactable = false; }

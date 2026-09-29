@@ -30,11 +30,11 @@ namespace GamingApp.EditorTools
             BuilderUtil.EnsureDir(BuilderUtil.SceneDir);
 
             BuildWorld();
-            var player = BuildPlayer(assets.PlayerProjectile, out var weapon);
+            var player = BuildPlayer(out var weapon);
             BuildCamera(player.transform);
             BuildManagers(player, weapon, assets, out var upgrades);
             UiBuilder.Build(player.GetComponent<PlayerController>(), player.GetComponent<Health>(),
-                player.GetComponent<PlayerExperience>(), upgrades);
+                player.GetComponent<PlayerExperience>(), weapon, upgrades);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
 
@@ -65,7 +65,7 @@ namespace GamingApp.EditorTools
             ground.GetComponent<Renderer>().sharedMaterial = groundMat;
         }
 
-        static GameObject BuildPlayer(Projectile projectile, out AutoWeapon weapon)
+        static GameObject BuildPlayer(out PlayerWeapon weapon)
         {
             var go = new GameObject("Player");
             go.transform.position = new Vector3(0f, 1f, 0f);
@@ -78,8 +78,7 @@ namespace GamingApp.EditorTools
             go.AddComponent<PlayerHealth>();
             go.AddComponent<PlayerController>();
             go.AddComponent<PlayerExperience>();
-            weapon = go.AddComponent<AutoWeapon>();
-            BuilderUtil.SetRef(weapon, "projectilePrefab", projectile);
+            weapon = go.AddComponent<PlayerWeapon>();
             BuilderUtil.SetRef(go.AddComponent<PlayerLoadout>(), "visual", visual);
             return go;
         }
@@ -97,7 +96,7 @@ namespace GamingApp.EditorTools
             BuilderUtil.SetRef(follow, "target", target);
         }
 
-        static void BuildManagers(GameObject player, AutoWeapon weapon, AssetBuilder.Result assets, out UpgradeManager upgrades)
+        static void BuildManagers(GameObject player, PlayerWeapon weapon, AssetBuilder.Result assets, out UpgradeManager upgrades)
         {
             var gm = new GameObject("GameManager").AddComponent<GameManager>();
             BuilderUtil.SetFloat(gm, "runDurationSeconds", TestRunSeconds);

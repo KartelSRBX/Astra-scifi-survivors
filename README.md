@@ -54,3 +54,9 @@ All menu art is procedural (`Assets/Scripts/Editor/UiArt.cs`, engine-independent
 - 10 enemy tiers, black/red: the darker the hull, the stronger the enemy. Tier 9 (Warden) and 10 (Leviathan) are bosses.
 - Items (`ItemData`): Weapon / Hull / Engine / Module slots, 4 rarities. Equip in Inventory. Runs award Biomass, Cores and a chance for an item.
 - Everything is listed in `Assets/Resources/GameDatabase.asset`; progress is saved by `Profile` (PlayerPrefs JSON).
+
+## Weapons
+- 8 weapons picked before a run (START -> Choose weapon): Blaster, Laser, CIWS, Heavy Missiles, Swarm Missiles, Plasma Cannon, Drone Swarm, Heavy Drones (`WeaponDef`, built by `WeaponBuilder`).
+- Player shots home in on the nearest enemy; missiles explode (AoE), plasma pierces, drones orbit and fire on their own.
+- Each weapon has 5 in-run steps offered on level-up (marked WEAPON), on top of generic upgrades like +% damage.
+- Weapon-slot items now tune whichever gun is picked (damage, fire rate, +projectile).

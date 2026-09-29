@@ -14,7 +14,7 @@ namespace GamingApp.Player
         void Awake()
         {
             var db = GameDatabase.Get();
-            if (db == null || db.ships.Count == 0) return;
+            if (db == null || db.ships.Count == 0 || db.weapons.Count == 0) return;
             var l = Loadout.Compute(db);
 
             if (visual != null && l.ship.sprite != null)
@@ -25,12 +25,13 @@ namespace GamingApp.Player
             GetComponent<Health>().SetMax(l.maxHealth);
             GetComponent<PlayerController>().BaseSpeed = l.moveSpeed;
             GetComponent<PlayerExperience>().PickupRadius = l.pickupRadius;
-            var w = GetComponent<AutoWeapon>();
-            w.weaponName = l.weaponName;
-            w.damage = l.damage;
-            w.fireInterval = l.fireInterval;
-            w.range = l.range;
-            w.projectilesPerShot = l.projectiles;
+
+            var w = GetComponent<PlayerWeapon>();
+            w.damageMult = l.damageMult;
+            w.fireRateMult = l.fireRateMult;
+            w.rangeMult = l.rangeMult;
+            w.extraProjectiles = l.extraProjectiles;
+            w.Equip(db.Weapon(RunSetup.WeaponId) ?? db.weapons[0]);
         }
     }
 }

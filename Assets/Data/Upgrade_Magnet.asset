@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bce02a418680bc489b33c74f432527c, type: 3}
   m_Name: Upgrade_Magnet
   m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Weapons.UpgradeData
-  displayName: 'Magnet: pickup +1.5'
+  displayName: Tractor beam +1.5
   description: Collect XP from further away.
   isWeaponUpgrade: 0
   stat: 6

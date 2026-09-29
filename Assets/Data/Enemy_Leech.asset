@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 586998ac18d30d34c8c98969c11015c2, type: 3}
+  m_Name: Enemy_Leech
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Enemies.EnemyData
+  displayName: Leech
+  prefab: {fileID: 8187763795452659742, guid: 6cb9237ed53a23444acace10f9d8ee5d, type: 3}
+  behaviour: 0
+  maxHealth: 22
+  moveSpeed: 3
+  contactDamage: 6
+  xpReward: 2
+  preferredDistance: 8
+  shootInterval: 2
+  projectilePrefab: {fileID: 0}
+  spawnWeight: 3
+  unlockAtProgress: 0.12
+  isMiniBoss: 0

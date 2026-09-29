@@ -47,12 +47,12 @@ namespace GamingApp.EditorTools
             r.Upgrades.Add(BuildUpgrade("Damage", "Damage +25%", "Your weapon hits harder.", true, UpgradeStat.WeaponDamage, 0.25f, 6));
             r.Upgrades.Add(BuildUpgrade("FireRate", "Fire rate +20%", "Shoot more often.", true, UpgradeStat.WeaponFireRate, 0.2f, 6));
             r.Upgrades.Add(BuildUpgrade("Range", "Range +20%", "Target enemies further away.", true, UpgradeStat.WeaponRange, 0.2f, 4));
-            r.Upgrades.Add(BuildUpgrade("Multishot", "+1 projectile", "Fire an extra bolt per shot.", true, UpgradeStat.ExtraProjectile, 1f, 4));
+            r.Upgrades.Add(BuildUpgrade("Multishot", "+1 projectile", "One more shot per volley, beam target or drone shot.", true, UpgradeStat.ExtraProjectile, 1f, 4));
             r.Upgrades.Add(BuildUpgrade("Speed", "Thrusters: speed +12%", "Move faster.", false, UpgradeStat.MoveSpeed, 0.12f, 5));
             r.Upgrades.Add(BuildUpgrade("Health", "Plating: hull +20%", "More hull, and repairs the difference.", false, UpgradeStat.MaxHealth, 0.2f, 5));
             r.Upgrades.Add(BuildUpgrade("Magnet", "Tractor beam +1.5", "Collect XP from further away.", false, UpgradeStat.PickupRadius, 1.5f, 4));
 
-            r.Database = BuildDatabase();
+            r.Database = BuildDatabase(WeaponBuilder.BuildAll(r.PlayerProjectile));
             AssetDatabase.SaveAssets();
             return r;
         }
@@ -84,7 +84,7 @@ namespace GamingApp.EditorTools
             return sr;
         }
 
-        static GameObject TriggerRoot(string name, float radius)
+        public static GameObject TriggerRoot(string name, float radius)
         {
             var go = new GameObject(name);
             var col = go.AddComponent<SphereCollider>();
@@ -153,13 +153,14 @@ namespace GamingApp.EditorTools
         }
 
         // ---------- ships, items, database ----------
-        static GameDatabase BuildDatabase()
+        static GameDatabase BuildDatabase(List<WeaponDef> weapons)
         {
             BuilderUtil.EnsureDir("Assets/Resources");
             BuilderUtil.EnsureDir(BuilderUtil.DataDir + "/Ships");
             BuilderUtil.EnsureDir(BuilderUtil.DataDir + "/Items");
 
             var db = ScriptableObject.CreateInstance<GameDatabase>();
+            db.weapons.AddRange(weapons);
             //                     id            name           class                 size  hp    speed dmg   rate  bio   cores
             db.ships.Add(Ship("corvette",    "Corvette",    "Light escort",        2.0f, 100f, 5.5f, 1f,   1f,   0,    0));
             db.ships.Add(Ship("frigate",     "Frigate",     "Multi-role patrol",   2.3f, 140f, 5.3f, 1.15f, 1.05f, 600, 0));
@@ -167,11 +168,12 @@ namespace GamingApp.EditorTools
             db.ships.Add(Ship("cruiser",     "Cruiser",     "Heavy line ship",     3.0f, 260f, 4.8f, 1.6f, 1.15f, 3500, 30));
             db.ships.Add(Ship("dreadnought", "Dreadnought", "Capital battleship",  3.6f, 380f, 4.5f, 2f,   1.25f, 8000, 80));
 
-            db.items.Add(Weapon("pulse_blaster", "Pulse Blaster", Rarity.Common, 5f, 0.8f, 10f, 1));
-            db.items.Add(Weapon("twin_laser", "Twin Laser", Rarity.Rare, 4f, 0.7f, 10f, 2));
-            db.items.Add(Weapon("scatter_array", "Scatter Array", Rarity.Rare, 3f, 0.9f, 8f, 4));
-            db.items.Add(Weapon("plasma_cannon", "Plasma Cannon", Rarity.Epic, 14f, 1.2f, 11f, 1));
-            db.items.Add(Weapon("rail_driver", "Rail Driver", Rarity.Legendary, 24f, 1f, 14f, 1));
+            // Weapon-slot items tune whichever gun is picked before the run (ids kept for existing saves).
+            db.items.Add(Part("pulse_blaster", "Basic Capacitor", ItemSlot.Weapon, Rarity.Common, dmg: 0.08f));
+            db.items.Add(Part("twin_laser", "Twin Emitter", ItemSlot.Weapon, Rarity.Rare, proj: 1));
+            db.items.Add(Part("scatter_array", "Cycler Array", ItemSlot.Weapon, Rarity.Rare, rate: 0.15f));
+            db.items.Add(Part("plasma_cannon", "Plasma Coil", ItemSlot.Weapon, Rarity.Epic, dmg: 0.25f));
+            db.items.Add(Part("rail_driver", "Rail Accelerator", ItemSlot.Weapon, Rarity.Legendary, dmg: 0.35f, range: 0.15f));
 
             db.items.Add(Part("composite_plating", "Composite Plating", ItemSlot.Hull, Rarity.Common, hp: 0.15f));
             db.items.Add(Part("reactive_hull", "Reactive Hull", ItemSlot.Hull, Rarity.Rare, hp: 0.25f));
@@ -200,18 +202,11 @@ namespace GamingApp.EditorTools
             return s;
         }
 
-        static ItemData Weapon(string id, string name, Rarity rarity, float dmg, float interval, float range, int projectiles)
-        {
-            var it = NewItem(id, name, ItemSlot.Weapon, rarity);
-            it.baseDamage = dmg; it.fireInterval = interval; it.range = range; it.projectiles = projectiles;
-            return Save(it);
-        }
-
         static ItemData Part(string id, string name, ItemSlot slot, Rarity rarity,
-            float hp = 0, float speed = 0, float dmg = 0, float rate = 0, float range = 0, float pickup = 0)
+            float hp = 0, float speed = 0, float dmg = 0, float rate = 0, float range = 0, float pickup = 0, int proj = 0)
         {
             var it = NewItem(id, name, slot, rarity);
-            it.healthPct = hp; it.speedPct = speed; it.damagePct = dmg; it.fireRatePct = rate; it.rangePct = range; it.pickupBonus = pickup;
+            it.healthPct = hp; it.speedPct = speed; it.damagePct = dmg; it.fireRatePct = rate; it.rangePct = range; it.pickupBonus = pickup; it.extraProjectiles = proj;
             return Save(it);
         }
 

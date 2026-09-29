@@ -8,7 +8,6 @@ namespace GamingApp.UI
     /// <summary>Main menu: start, settings, currencies, selected ship avatar, placeholder screens.</summary>
     public class MenuController : MonoBehaviour
     {
-        [SerializeField] Button playButton;
         [SerializeField] Button settingsButton;
         [SerializeField] Button closeSettingsButton;
         [SerializeField] GameObject settingsPanel;
@@ -29,7 +28,6 @@ namespace GamingApp.UI
             Time.timeScale = 1f;
             settingsPanel.SetActive(false);
             placeholderPanel.SetActive(false);
-            playButton.onClick.AddListener(() => SceneLoader.Load(SceneLoader.Game));
             settingsButton.onClick.AddListener(() => settingsPanel.SetActive(true));
             closeSettingsButton.onClick.AddListener(() => { settingsPanel.SetActive(false); PlayerPrefs.Save(); });
             placeholderClose.onClick.AddListener(() => placeholderPanel.SetActive(false));

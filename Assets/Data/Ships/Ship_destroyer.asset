@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21de09d3866b86e4b962e6c242ba9de8, type: 3}
+  m_Name: Ship_destroyer
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Meta.ShipData
+  id: destroyer
+  displayName: Destroyer
+  shipClass: Strike vessel
+  sprite: {fileID: 21300000, guid: 5511b814d5b104f4ba0a40afb76ccd65, type: 3}
+  visualSize: 2.6
+  maxHealth: 180
+  moveSpeed: 5.1
+  damageMultiplier: 1.35
+  fireRateMultiplier: 1.1
+  priceBiomass: 1500
+  priceCores: 10

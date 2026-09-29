@@ -139,7 +139,7 @@ namespace GamingApp.EditorTools
                 });
                 case "ico_ship": return Icon(name, p => Poly(p, P(64, 118), P(80, 60), P(104, 22), P(64, 38), P(24, 22), P(48, 60)) - 3f);
             }
-            throw new ArgumentException("Unknown art: " + name);
+            return MakeWeaponArt(name);
         }
 
         static float Flame(V2 p, V2 c, float r, float tipY) => SMin(Circle(p, c, r), Poly(p, P(c.x, tipY), P(c.x - r * 0.8f, c.y - 2f), P(c.x + r * 0.8f, c.y - 2f)), 3f);

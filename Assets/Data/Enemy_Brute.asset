@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 586998ac18d30d34c8c98969c11015c2, type: 3}
+  m_Name: Enemy_Brute
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Enemies.EnemyData
+  displayName: Brute
+  prefab: {fileID: 5770283844020924468, guid: d1b95f58e85d35640b0d8572263d6779, type: 3}
+  behaviour: 0
+  maxHealth: 110
+  moveSpeed: 1.8
+  contactDamage: 14
+  xpReward: 5
+  preferredDistance: 8
+  shootInterval: 2
+  projectilePrefab: {fileID: 0}
+  spawnWeight: 1.2
+  unlockAtProgress: 0.4
+  isMiniBoss: 0
