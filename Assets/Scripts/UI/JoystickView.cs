@@ -29,8 +29,8 @@ namespace GamingApp.UI
             float diameter = controller.JoystickRadiusPixels * 2f / canvas.scaleFactor;
             ring.sizeDelta = new Vector2(diameter, diameter);
             knob.sizeDelta = new Vector2(diameter * 0.4f, diameter * 0.4f);
-            RectTransformUtility.ScreenPointToLocalPoint(canvasRect, controller.DragOriginScreen, null, out var o);
-            RectTransformUtility.ScreenPointToLocalPoint(canvasRect, controller.DragCurrentScreen, null, out var c);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, controller.DragOriginScreen, null, out var o);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, controller.DragCurrentScreen, null, out var c);
             ring.anchoredPosition = o;
             knob.anchoredPosition = c;
         }
