@@ -30,7 +30,8 @@ namespace GamingApp.EditorTools
             var scaler = canvasGo.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080, 1920);
-            scaler.matchWidthOrHeight = 0.5f;
+            // Shrink keeps the whole 1080x1920 layout on screen for any aspect (tall phones, tablets, editor).
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
             return (RectTransform)canvasGo.transform;
         }
 

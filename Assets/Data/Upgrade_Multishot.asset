@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Upgrade_Multishot
   m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Weapons.UpgradeData
   displayName: +1 projectile
-  description: Fire an extra bolt per shot.
+  description: One more shot per volley, beam target or drone shot.
   isWeaponUpgrade: 1
   stat: 3
   amount: 1

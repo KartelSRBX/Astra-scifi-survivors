@@ -17,13 +17,10 @@ MonoBehaviour:
   slot: 1
   rarity: 0
   icon: {fileID: 21300000, guid: e777eb7b451a66545852231356a7fdeb, type: 3}
-  baseDamage: 5
-  fireInterval: 0.8
-  range: 10
-  projectiles: 1
   healthPct: 0.15
   speedPct: 0
   damagePct: 0
   fireRatePct: 0
   rangePct: 0
   pickupBonus: 0
+  extraProjectiles: 0

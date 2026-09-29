@@ -13,17 +13,14 @@ MonoBehaviour:
   m_Name: Item_scatter_array
   m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Meta.ItemData
   id: scatter_array
-  displayName: Scatter Array
+  displayName: Cycler Array
   slot: 0
   rarity: 1
   icon: {fileID: 21300000, guid: 3cc74875bf03bef4ea2c47040d0af389, type: 3}
-  baseDamage: 3
-  fireInterval: 0.9
-  range: 8
-  projectiles: 4
   healthPct: 0
   speedPct: 0
   damagePct: 0
-  fireRatePct: 0
+  fireRatePct: 0.15
   rangePct: 0
   pickupBonus: 0
+  extraProjectiles: 0

@@ -13,17 +13,14 @@ MonoBehaviour:
   m_Name: Item_rail_driver
   m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Meta.ItemData
   id: rail_driver
-  displayName: Rail Driver
+  displayName: Rail Accelerator
   slot: 0
   rarity: 3
   icon: {fileID: 21300000, guid: 3cc74875bf03bef4ea2c47040d0af389, type: 3}
-  baseDamage: 24
-  fireInterval: 1
-  range: 14
-  projectiles: 1
   healthPct: 0
   speedPct: 0
-  damagePct: 0
+  damagePct: 0.35
   fireRatePct: 0
-  rangePct: 0
+  rangePct: 0.15
   pickupBonus: 0
+  extraProjectiles: 0
