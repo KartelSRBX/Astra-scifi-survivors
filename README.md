@@ -4,8 +4,8 @@ Unity skeleton for the roadmap in `SciFi рогалик с волнами (Andro
 Scripts plus an editor tool that generates a playable placeholder scene. No real art yet.
 
 ## Open the project
-1. Install Unity 6 (6000.0 LTS) with the Android Build Support module.
-2. Unity Hub > Add > select this folder. `ProjectSettings/ProjectVersion.txt` is a placeholder; Unity will offer to upgrade/fix it.
+1. Install Unity 6000.6.3f1 with the Android Build Support module.
+2. Unity Hub > Add > select this folder.
 3. Input uses the legacy `UnityEngine.Input` (touch, mouse fallback in the editor), so keep *Active Input Handling* on "Input Manager (Old)" or "Both".
 
 ## Quick start: playable test scene
@@ -17,7 +17,7 @@ Scripts plus an editor tool that generates a playable placeholder scene. No real
 The builder is safe to re-run; it regenerates the scene and assets. The UI uses legacy uGUI `Text` (no TextMeshPro import needed); switch to TMP together with the localization work.
 
 ## Status
-Written without Unity available, so it has never been compiled or run. Expect to fix small compile or setup errors on first open; report the Console output and it can be patched.
+Compiles and the test scene builds in Unity 6000.6.3f1 (the project's current editor). Play-mode behaviour and balance are still being playtested. Android Build Support must be installed for the same editor version to build APK/AAB.
 
 ## Layout (`Assets/Scripts`)
 | Folder | Scripts |
