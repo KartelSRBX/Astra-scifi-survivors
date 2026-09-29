@@ -5,8 +5,8 @@ namespace GamingApp.Meta
     {
         public ShipData ship;
         public int level;
-        public float maxHealth, moveSpeed, pickupRadius;
-        public float damageMult, fireRateMult, rangeMult;
+        public float maxHealth, moveSpeed, pickupRadius, armor;
+        public float damageMult, fireRateMult, rangeMult, projectileSpeedMult;
         public int extraProjectiles;
 
         public const float BasePickupRadius = 2.5f;
@@ -28,6 +28,9 @@ namespace GamingApp.Meta
                 rate += it.fireRatePct; rng += it.rangePct; pickup += it.pickupBonus; proj += it.extraProjectiles;
             }
 
+            var gear = ModuleShop.GearBonus();
+            hp += gear.health; spd += gear.speed; dmg += gear.damage; rate += gear.fireRate; rng += gear.range; pickup += gear.pickup;
+
             return new Loadout
             {
                 ship = ship,
@@ -39,6 +42,8 @@ namespace GamingApp.Meta
                 rangeMult = 1f + rng,
                 extraProjectiles = proj,
                 pickupRadius = BasePickupRadius + pickup,
+                armor = gear.armor,
+                projectileSpeedMult = 1f + gear.projectileSpeed,
             };
         }
     }

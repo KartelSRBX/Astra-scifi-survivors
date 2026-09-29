@@ -8,6 +8,9 @@ namespace GamingApp.Core
     {
         [SerializeField] float maxHealth = 100f;
 
+        /// <summary>Fraction of incoming damage ignored (player armor).</summary>
+        [NonSerialized] public float damageReduction;
+
         public float Max => maxHealth;
         public float Current { get; private set; }
         public bool IsDead => Current <= 0f;
@@ -27,7 +30,7 @@ namespace GamingApp.Core
         public void TakeDamage(float amount)
         {
             if (IsDead) return;
-            Current = Mathf.Max(0f, Current - amount);
+            Current = Mathf.Max(0f, Current - amount * (1f - damageReduction));
             Changed?.Invoke(Current, maxHealth);
             if (IsDead) Died?.Invoke(this);
         }

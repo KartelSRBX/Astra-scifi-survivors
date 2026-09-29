@@ -57,8 +57,9 @@ namespace GamingApp.EditorTools
             BuildHangar(root, host, (Button)navButtons[0]);
             BuildInventory(root, host, (Button)navButtons[1]);
             BuildWeaponSelect(root, host, play);
-            navButtons.RemoveRange(0, 2);
-            navTitles.RemoveRange(0, 2);
+            BuildModuleShop(root, host, (Button)navButtons[2]);
+            navButtons.RemoveRange(0, 3);
+            navTitles.RemoveRange(0, 3);
 
             var sel = host.AddComponent<SystemSelector>();
             BuilderUtil.SetRef(sel, "prevButton", stageRefs.prev);
@@ -241,7 +242,7 @@ namespace GamingApp.EditorTools
             {
                 (-400, "HANGAR", "HANGAR", "ico_ship", UiTheme.Teal),
                 (-210, "INVENTORY", "INVENTORY", "ico_inventory", SoftBlue),
-                (210, "UPGRADES", "UPGRADES", "ico_upgrades", SoftViolet),
+                (210, "MODULES", "MODULES", "ico_upgrades", SoftViolet),
                 (400, "FORGE", "FORGE", "ico_forge", UiTheme.White),
             };
             foreach (var it in items)

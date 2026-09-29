@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57b1bb10178cbff478c08b23a9213ef4, type: 3}
+  m_Name: System_08
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Meta.StarSystemData
+  index: 7
+  displayName: Polaris Gate
+  starColor: {r: 0.5, g: 1, b: 1, a: 1}
+  floorColor: {r: 0.03, g: 0.07, b: 0.1, a: 1}
+  systemSprite: {fileID: 21300000, guid: 1c0e080638d82b64fb672c9320c46f21, type: 3}
+  nebulaA: {fileID: 21300000, guid: 5491b3f058da92841b15b097dae47772, type: 3}
+  nebulaB: {fileID: 21300000, guid: 4dd2ac3276463da45b76061a20778f0d, type: 3}
+  floor: {fileID: 2800000, guid: c56996573b0b46448b6532eeab238b57, type: 3}

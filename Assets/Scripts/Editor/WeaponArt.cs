@@ -9,7 +9,7 @@ namespace GamingApp.EditorTools
         {
             "missile_heavy", "missile_swarm", "bullet_ciws", "plasma_orb", "bolt_heavy", "drone_small", "drone_heavy",
             "fx_explosion", "fx_spark", "beam",
-            "ico_w_blaster", "ico_w_laser", "ico_w_ciws", "ico_w_missile", "ico_w_swarm", "ico_w_plasma", "ico_w_drones", "ico_w_hdrones",
+            "ico_w_blaster", "ico_w_laser", "ico_w_ciws", "ico_w_missile", "ico_w_swarm", "ico_w_plasma", "ico_w_drones", "ico_w_hdrones", "ico_sensor",
         };
 
         static Art MakeWeaponArt(string name)
@@ -46,6 +46,15 @@ namespace GamingApp.EditorTools
                 case "ico_w_swarm": return Icon(name, p => Min(SmallMissile(p, P(38, 52)), Min(SmallMissile(p, P(64, 70)), SmallMissile(p, P(90, 52)))));
                 case "ico_w_plasma": return Icon(name, p => Min(Circle(p, P(64, 64), 22), Min(Ring(Circle(p, P(64, 64), 40), 7), Circle(p, P(100, 92), 7))));
                 case "ico_w_drones": return Icon(name, DronesIcon);
+                case "ico_sensor": return Icon(name, p =>
+                {
+                    var c = P(64, 22);
+                    var d = p - c;
+                    float ang = MathF.Atan2(d.y, d.x) / Deg;
+                    float wedge = MathF.Max(40f - ang, ang - 140f) * d.Len * Deg;
+                    float arcs = Min(Ring(Circle(p, c, 34), 8), Min(Ring(Circle(p, c, 56), 8), Ring(Circle(p, c, 78), 8)));
+                    return Min(MathF.Max(arcs, wedge), Circle(p, c, 11));
+                });
                 case "ico_w_hdrones": return Icon(name, p => Min(Min(Poly(p, Hex(P(40, 58), 22)) - 2f, Poly(p, Hex(P(88, 58), 22)) - 2f),
                     Min(Box(p, P(40, 92), P(4, 12), 2), Box(p, P(88, 92), P(4, 12), 2))));
             }

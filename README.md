@@ -65,3 +65,8 @@ All menu art is procedural (`Assets/Scripts/Editor/UiArt.cs`, engine-independent
 - 10 star systems (`StarSystemData`), each with its own nebula backdrop, showcase art and battle floor. Enemies get +15% HP/damage per system; rewards scale the same.
 - Threat clearance per system = best run progress (full survival = 100%). Clearing a system unlocks the next.
 - Juice: enemy death bursts, screen shake (hits, bosses), red damage flash, system intro and boss warning banners.
+
+## Module shop
+- MODULES in the dock: 10 modules per weapon (damage / fire rate / shot speed; laser gets range), 5 armor (hull, armor), 5 engines (speed), 5 sensors (range). Each has Mk I-V, bought and upgraded with Biomass (Mk IV-V also Cores); each module needs the previous one in its list.
+- All owned modules of the chosen weapon are active; one armor, engine and sensor is equipped. Armor reduces damage: armor/(armor+100).
+- Catalog is generated in code: `Assets/Scripts/Meta/ModuleCatalog.cs`.

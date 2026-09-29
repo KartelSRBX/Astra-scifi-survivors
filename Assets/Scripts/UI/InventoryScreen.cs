@@ -71,7 +71,7 @@ namespace GamingApp.UI
         {
             var l = Loadout.Compute(db);
             shipImage.sprite = l.ship.sprite;
-            statsText.text = $"HULL {l.maxHealth:0}    DMG x{l.damageMult:0.00}    RATE x{l.fireRateMult:0.00}    SPD {l.moveSpeed:0.0}";
+            statsText.text = $"HULL {l.maxHealth:0}   ARMOR {l.armor:0}   DMG x{l.damageMult:0.00}   RATE x{l.fireRateMult:0.00}   SPD {l.moveSpeed:0.0}";
 
             for (int s = 0; s < slotIcons.Length; s++)
             {

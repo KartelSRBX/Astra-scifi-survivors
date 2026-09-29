@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57b1bb10178cbff478c08b23a9213ef4, type: 3}
+  m_Name: System_09
+  m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Meta.StarSystemData
+  index: 8
+  displayName: Eta Carinae
+  starColor: {r: 1, g: 0.5, b: 0.8, a: 1}
+  floorColor: {r: 0.08, g: 0.03, b: 0.08, a: 1}
+  systemSprite: {fileID: 21300000, guid: e590ca5d97bb6e44a8c7e35d283d4f61, type: 3}
+  nebulaA: {fileID: 21300000, guid: 4877dc86cb1677142a527e1d8feb3a70, type: 3}
+  nebulaB: {fileID: 21300000, guid: 759bf8816a23ac3459a4e70d3b63adaf, type: 3}
+  floor: {fileID: 2800000, guid: 58253749916366849a37aa9cf0fb9ef0, type: 3}

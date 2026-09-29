@@ -111,6 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GamingApp.Enemies.Enemy
   data: {fileID: 0}
   xpGemPrefab: {fileID: 4119445580203271710, guid: 09b458c790cbe9543a936b20138b3299, type: 3}
+  deathFx: {fileID: 2054408277586878180, guid: 17787423ffcfee946a9feaf125815d4e, type: 3}
 --- !u!1 &7734703753239815576
 GameObject:
   m_ObjectHideFlags: 0

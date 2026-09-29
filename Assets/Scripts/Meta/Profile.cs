@@ -18,6 +18,9 @@ namespace GamingApp.Meta
             public int[] equipped = { -1, -1, -1, -1 }; // index into items, per ItemSlot
             public List<float> systemClearance = new(); // 0..1 per star system
             public List<float> systemBest = new();      // best survival seconds per system
+            public List<string> moduleIds = new();
+            public List<int> moduleTiers = new();       // 1..5 (Mk I..V)
+            public string armor = "", engine = "", sensor = "";
         }
 
         const string Key = "profile_v1";
@@ -97,6 +100,37 @@ namespace GamingApp.Meta
             while (D.systemBest.Count <= i) D.systemBest.Add(0f);
             D.systemClearance[i] = Mathf.Max(D.systemClearance[i], Mathf.Clamp01(clearance));
             D.systemBest[i] = Mathf.Max(D.systemBest[i], seconds);
+            Save();
+        }
+
+        // ---- shop modules ----
+        public static int ModuleTier(string id)
+        {
+            int i = D.moduleIds.IndexOf(id);
+            return i < 0 ? 0 : D.moduleTiers[i];
+        }
+
+        public static void SetModuleTier(string id, int tier)
+        {
+            int i = D.moduleIds.IndexOf(id);
+            if (i < 0) { D.moduleIds.Add(id); D.moduleTiers.Add(tier); }
+            else D.moduleTiers[i] = tier;
+            Save();
+        }
+
+        public static string EquippedGear(ModuleKind kind) => kind switch
+        {
+            ModuleKind.Armor => D.armor,
+            ModuleKind.Engine => D.engine,
+            ModuleKind.Sensor => D.sensor,
+            _ => "",
+        };
+
+        public static void EquipGear(ModuleKind kind, string id)
+        {
+            if (kind == ModuleKind.Armor) D.armor = id;
+            else if (kind == ModuleKind.Engine) D.engine = id;
+            else if (kind == ModuleKind.Sensor) D.sensor = id;
             Save();
         }
 

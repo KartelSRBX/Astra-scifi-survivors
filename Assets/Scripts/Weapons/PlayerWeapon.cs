@@ -17,7 +17,7 @@ namespace GamingApp.Weapons
         public WeaponStats Stats { get; private set; } = new();
 
         // Ship, items and generic level-up cards.
-        [NonSerialized] public float damageMult = 1f, fireRateMult = 1f, rangeMult = 1f;
+        [NonSerialized] public float damageMult = 1f, fireRateMult = 1f, rangeMult = 1f, projectileSpeedMult = 1f;
         [NonSerialized] public int extraProjectiles;
 
         float stepDamage = 1f, stepRate = 1f, stepRange = 1f, stepAoe = 1f, stepSetAoe;
@@ -68,6 +68,7 @@ namespace GamingApp.Weapons
             s.damage = b.damage * damageMult * stepDamage;
             s.fireInterval = b.fireInterval / (fireRateMult * stepRate);
             s.range = b.range * rangeMult * stepRange;
+            s.speed = b.speed * projectileSpeedMult;
             s.projectiles = b.projectiles + stepProjectiles + extraProjectiles;
             s.aoe = Mathf.Max(b.aoe, stepSetAoe) * stepAoe;
             s.pierce = b.pierce + stepPierce;
